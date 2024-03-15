@@ -56,7 +56,7 @@ SQL:
 Database: arfnet2
 Tables:
     users       User logins
-        id autoincrement, username, password (hash), email, email verification code, user type { client, helpdesk, admin }, register date
+        id autoincrement, username, password (hash), email, email verification code, user type { client, helpdesk, accountant, admin }, register date
     services    Available services and management notes etc
         id autoincrement, name, type, billing, description
     orders
