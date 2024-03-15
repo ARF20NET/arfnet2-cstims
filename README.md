@@ -1,5 +1,5 @@
-# arfnet2-cst
-ARFNET2 Client, Service manager and Ticketing system
+# arfnet2-csti
+ARFNET2 Client, Service, Ticket and Invoice management system
 
 ```
 User types:
