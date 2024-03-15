@@ -11,6 +11,9 @@ User types:
 Report problems with CST or such as password changes to admin@arf20.com
 
 FILES:
+    index.html
+        landing page, branding?
+
     register.php -> login.php
         registers client to db
         send email with verification link
@@ -53,7 +56,6 @@ FILES:
 
 
 SQL:
-Database: arfnet2
 Tables:
     users       User logins
         id autoincrement, username, password (hash), email, email verification code, user type { client, helpdesk, accountant, admin }, register date

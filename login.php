@@ -99,32 +99,36 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
  
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="arfCloud.css">
-	<link rel="stylesheet" type="text/css" href="/style.css">
-</head>
-<body>
-    <div class="wrapper">
-        <h2>arfCloud Login</h2>
-		<p>For those who don't want their data sold by Google</p>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group row <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
-                <div class="column"><label>Username</label></div>
-                <div class="column"><input type="text" name="username" class="form-control" pattern="[a-zA-Z0-9_]+" value="<?php echo $username; ?>"></div>
-                <span class="help-block"><?php echo $username_err; ?></span>
-            </div>    
-            <div class="form-group row <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
-                <div class="column"><label>Password</label></div>
-                <div class="column"><input type="password" name="password" pattern="[a-zA-Z0-9_]+" class="form-control"></div>
-                <span class="help-block"><?php echo $password_err; ?></span>
+    <head>
+        <meta charset="UTF-8">
+        <title>CSTIMS Login</title>
+        <link rel="stylesheet" type="text/css" href="/style.css">
+    </head>
+    <body>
+        <header><a href="https://arf20.com/">
+            <img src="arfnet_logo.png" width="64"><span class="title"><strong>ARFNET</strong></span>
+        </a></header>
+        <hr>
+        <main>
+            <div class="wrapper">
+                <h2>CSTIMS Login</h2>
+                <form action="/login.php" method="post">
+                    <div class="form-group row <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
+                        <div class="column"><label>Username</label></div>
+                        <div class="column"><input type="text" name="username" class="form-control" pattern="[a-zA-Z0-9_]+" value="<?php echo $username; ?>"></div>
+                        <span class="help-block"><?php echo $username_err; ?></span>
+                    </div>    
+                    <div class="form-group row <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
+                        <div class="column"><label>Password</label></div>
+                        <div class="column"><input type="password" name="password" pattern="[a-zA-Z0-9_]+" class="form-control"></div>
+                        <span class="help-block"><?php echo $password_err; ?></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Login">
+                    </div>
+                    <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
+                </form>
             </div>
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Login">
-            </div>
-            <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
-        </form>
-    </div>    
-</body>
+        </main>
+    </body>
 </html>
