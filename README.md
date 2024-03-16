@@ -1,5 +1,7 @@
-# arfnet2-csti
-ARFNET2 Client, Service, Ticket and Invoice management system
+# arfnet2-cstims
+ARFNET2 Client, Service, Ticket and Invoice Management System
+
+Depends on PHPMailer
 
 ```
 User types:
@@ -23,11 +25,14 @@ FILES:
     logout.php -> login.php
         stops session
 
+    verify.php -> login.php
+        from a link, has the base64 code generated at registration sent to email for verification
+
     client.php -> { order.php, openticket.php }
         shows ordered services and opened tickets
     helpdesk.php
         view, self-assign and close tickets
-    accounting.php
+    accountant.php
         view invoices and change status
     admin.php -> { manageusers.php, manageservices.php, managetickets.php }
         shows users, services, tickets and invoices
@@ -58,7 +63,7 @@ FILES:
 SQL:
 Tables:
     users       User logins
-        id autoincrement, username, password (hash), email, email verification code, user type { client, helpdesk, accountant, admin }, register date
+        id autoincrement, username, password (hash), email, email verification code, status { verified, unverified }, type { client, helpdesk, accountant, admin }, register date
     services    Available services and management notes etc
         id autoincrement, name, type, billing, description
     orders

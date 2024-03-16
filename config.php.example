@@ -6,6 +6,12 @@ define('DB_SERVER', 'hostname');
 define('DB_USERNAME', 'username');
 define('DB_PASSWORD', 'password');
 define('DB_NAME', 'dbname');
+
+define('MAIL_SERVER', 'mail.example.com');
+define('MAIL_PORT', 587);
+define('MAIL_USER', 'user');
+define('MAIL_PASSWORD', 'password');
+define('MAIL_FROM', 'system@example.com');
  
 /* Attempt to connect to MySQL database */
 $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
@@ -14,4 +20,16 @@ $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 if($link === false){
     die("ERROR: Could not connect. " . mysqli_connect_error());
 }
+
+$mailer = new PHPMailer();
+$mailer->isSMTP();
+$mailer->SMTPDebug = SMTP::DEBUG_SERVER;
+$mailer->Host = MAIL_SERVER;
+$mailer->Port = MAIL_PORT;
+$mailer->SMTPAuth = true;
+$mailer->Username = MAIL_USER;
+$mailer->Password = MAIL_PASSWORD;
+$mailer->setFrom(MAIL_FROM);
+$mailer->isHTML(false);
+
 ?>

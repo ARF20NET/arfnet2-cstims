@@ -6,6 +6,7 @@ CREATE TABLE `arfnet2`.`users` (
     `password` VARCHAR(255) NOT NULL ,
     `email` VARCHAR(127) NOT NULL ,
     `verifycode` VARCHAR(31) NOT NULL ,
+    `status` ENUM('verified','unverified') NOT NULL DEFAULT 'unverified' ,
     `type` ENUM('client','helpdesk','accountant','admin') NOT NULL ,
     `regdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     PRIMARY KEY (`id`)

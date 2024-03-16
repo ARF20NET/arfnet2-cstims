@@ -3,8 +3,8 @@
 session_start();
  
 // Check if the user is already logged in, if yes then redirect him to welcome page
-if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-    header("location: welcome.php");
+if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+    header("location: /".$_SESSION["type"].".php");
     exit;
 }
  
@@ -18,35 +18,29 @@ $username_err = $password_err = "";
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate username
-    if(empty(trim($_POST["username"]))){
-        $username_err = "Please enter username.";
-    } else{
-		if (preg_match("[a-zA-Z0-9_]+", $_POST["username"]) == 1) {
-			$username_err = "Invalid username.";
-		}
-		else {
-			$username = trim($_POST["username"]);
-		}
-    }
+    if (empty($_POST["username"]))
+        $username_err = "Enter a username.";
+    else if (preg_match("/[a-zA-Z0-9_]+/", $_POST["username"]) != 1)
+        $username_err = "Invalid username.";
+    else
+        $username = $_POST["username"];
     
-    // Validated password
-    if(empty(trim($_POST["password"]))){
-        $password_err = "Please enter your password.";
-    } else{
-		if (preg_match("[a-zA-Z0-9_]+", $_POST["password"]) == 1) {
-			$username_err = "Invalid password.";
-		}
-		else {
-			$password = trim($_POST["password"]);
-		}
-    }
+    // Validate password
+    if (empty($_POST["password"]))
+        $password_err = "Enter a password.";     
+    else if (strlen($_POST["password"]) < 8)
+        $password_err = "Password must have at least 8 characters.";
+    else if (preg_match("/[a-zA-Z0-9!@^*$%&)(=+çñÇ][}{\-.,_:;]+/", $_POST["password"]) != false)
+        $password_err = "Password must be in the format [a-zA-Z0-9!@^*$%&)(=+çñÇ][}{-.,_:;].";
+    else
+        $password = $_POST["password"];
     
     // Validate credentials
-    if(empty($username_err) && empty($password_err)){
+    if (empty($username_err) && empty($password_err)) {
         // Prepare a select statement
-        $sql = "SELECT id, username, password FROM users WHERE username = ?";
+        $sql = "SELECT id, username, password, status, type FROM users WHERE username = ?";
         
-        if($stmt = mysqli_prepare($link, $sql)){
+        if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "s", $param_username);
             
@@ -54,29 +48,33 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_username = $username;
             
             // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
+            if (mysqli_stmt_execute($stmt)){
                 // Store result
                 mysqli_stmt_store_result($stmt);
                 
                 // Check if username exists, if yes then verify password
-                if(mysqli_stmt_num_rows($stmt) == 1){                    
+                if (mysqli_stmt_num_rows($stmt) == 1) {                    
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
-                    if(mysqli_stmt_fetch($stmt)){
-                        if(password_verify($password, $hashed_password)){
-                            // Password is correct, so start a new session
-                            session_start();
+                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password, $status, $type);
+                    if (mysqli_stmt_fetch($stmt)){
+                        if (password_verify($password, $hashed_password)) {
+                            // Password is correct, check verification
+                            if ($status == "verified") {
+                                session_start();
                             
-                            // Store data in session variables
-                            $_SESSION["loggedin"] = true;
-                            $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;                            
-                            
-                            // Redirect user to welcome page
-                            header("location: welcome.php");
-                        } else{
-                            // Display an error message if password is not valid
-                            $password_err = "The password you entered was not valid.";
+                                // Store data in session variables
+                                $_SESSION["loggedin"] = true;
+                                $_SESSION["id"] = $id;
+                                $_SESSION["username"] = $username;
+                                $_SESSION["type"] = $type;
+                                
+                                // Redirect user to appropiate page
+                                header("location: /".$type.".php");
+                            } else {
+                                $username_err = "Unverified account, check your email.";
+                            }
+                        } else {
+                            $password_err = "Incorrect password.";
                         }
                     }
                 } else{

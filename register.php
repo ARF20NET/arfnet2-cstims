@@ -1,13 +1,28 @@
 <?php
+// Dependency
+
+function send_verification_email($rcpt, $code) {
+    global $mailer;
+    $mailer->addAddress($rcpt);
+    $mailer->Subject = 'ARFNET Email Verification';
+    $mailer->Body = "Welcome to ARFNET\n\nUse the following link to verify your email address\n\n"
+        ."https://".DOMAIN."/verify.php?code=".$code
+        ."\n\n--\nARFNET Client, Service, Ticket and Invoice Management System\nhttps://arf20.com";
+    if (!$mailer->send()) {
+        echo 'Mailer Error [ask arf20]: ' . $mailer->ErrorInfo;
+    }
+}
+
 // Include config file
 require_once "config.php";
  
 // Define variables and initialize with empty values
 $username = $password = $confirm_password = $email = "";
 $username_err = $password_err = $confirm_password_err = $email_err = "";
+$verification_mail_sent = false;
  
 // Processing form data when form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST"){
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate username
     if (empty($_POST["username"]))
         $username_err = "Enter a username.";
@@ -84,7 +99,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             // Attempt to execute the prepared statement
             if (mysqli_stmt_execute($stmt)) {
                 // Send verification email
-                
+                send_verification_email($email, $param_verifycode);
+                $verification_mail_sent = true;
                 // Redirect to login page
                 header("location: login.php");
             } else {
@@ -142,6 +158,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                         <input type="submit" class="btn btn-primary" value="Submit">
                     </div>
                     <p><a href="login.php">Login</a>.</p>
+                    <?php if ($verification_mail_sent) echo 'Verification email sent.'; ?>
                 </form>
             </div>
         </main>
