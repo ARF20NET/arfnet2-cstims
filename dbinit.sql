@@ -11,3 +11,12 @@ CREATE TABLE `arfnet2`.`users` (
     `regdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     PRIMARY KEY (`id`)
 );
+
+CREATE TABLE `arfnet2`.`services` (
+    `id` INT NOT NULL AUTO_INCREMENT ,
+    `name` VARCHAR(255) NOT NULL ,
+    `type` ENUM('free','standard','premium') NOT NULL ,
+    `billing` DECIMAL NOT NULL ,
+    `description` TEXT NOT NULL ,
+    PRIMARY KEY (`id`)
+);

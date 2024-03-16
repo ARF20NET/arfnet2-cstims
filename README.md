@@ -9,6 +9,11 @@ User types:
     Helpdesk:   read, answer and close tickets
     Accountant: view invoices and change status
     Client:     order services and open tickets
+Service types:
+    premium, standard, free
+Services:
+    VPS, VPN, webhost, bot host, game host, proxy, mirror, subdomain, storage,
+    nextcloud, jellyfin, email, matrix, xmpp, voip
 
 Report problems with CST or such as password changes to admin@arf20.com
 
@@ -50,6 +55,8 @@ FILES:
             form to add, edit and delete user entries
         manageservices.php
             form to add, edit and delete service entries
+        manageorders.php
+            form to add, edit and delete order entries
         managetickets.php
             form to add, edit and delete ticket entries (assign, too, sends email to specific helpdesk person)
         manageinvoices.php
@@ -64,9 +71,9 @@ SQL:
 Tables:
     users       User logins
         id autoincrement, username, password (hash), email, email verification code, status { verified, unverified }, type { client, helpdesk, accountant, admin }, register date
-    services    Available services and management notes etc
+    services    Available services
         id autoincrement, name, type, billing, description
-    orders
+    orders      List of user orders and management notes etc
         id autoincrement, service id, instance name, client id, order date, specific billing, comments
     tickets     List of tickets
         id autoincrement, client id, title, body, status { open, closed, nofix }, asignee

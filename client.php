@@ -1,3 +1,19 @@
+<?php
+
+session_start();
+
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+    header("location: /login.php");
+    exit;
+}
+
+$username = $_SESSION["username"];
+$type = $_SESSION["type"];
+
+require_once "config.php";
+
+?>
+
 <!doctype html>
 <html>
     <head>
@@ -13,22 +29,24 @@
         <main>
             <div class="row">
                 <div class="col8">
-                    <h2 class="center">ARFNET Client Service Ticket and Invoice Management System</h2>
-                    <p>State of the art hosting solution with ultra personalised service</p>
+                    <h2>ARFNET Client Service Ticket and Invoice Management System</h2>
+                    <h3><?php echo strtoupper($type[0]).substr($type, 1); ?> panel</h3>
                     <div class="row">
                         <div class="col5">
-                            <h3>Our cutting edge datacenter</h3>
-                            <img class="img" src="/rack.jpg"><br>
+                            <h3>Active services</h3>
+                            <!-- TODO PHP list of services -->
                         </div>
                         <div class="col5">
-                            <h3>Services and plans</h3>
+                            <h3>Tickets</h3>
                             <!-- TODO PHP list of services -->
                         </div>
                     </div>
                 </div>
                 <div class="col2">
-                    <h3><a href="/login.php">Login</h2>
-                    <h3><a href="/register.php">Sign up today!</h2>
+                    <h3>Logged as <?php echo $username; ?></h3>
+                    <h3><a href="/logout.php">Logout</h2>
+                    <h3><a href="/order.php">Order a new service</h2>
+                    <h3><a href="/openticket.php">Open ticket</h2>
                 </div>
             </div>
         </main>

@@ -22,12 +22,12 @@ body {
     font-size: 150%;
 }
 
-.col {
+.col5 {
     float: left;
     width: 50%;
 }
 
-.col1 {
+.col8 {
     float: left;
     width: 80%;
 }
@@ -53,5 +53,9 @@ body {
 	border-style: double;
 	margin: auto;
 	margin-top: 200px;
+}
+
+table, th, td {
+    border: 1px solid black;
 }
 
