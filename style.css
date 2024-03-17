@@ -55,6 +55,12 @@ body {
 	margin-top: 200px;
 }
 
+.editform {
+    width: fit-content;
+	padding: 20px;
+    border-style: double;
+}
+
 table, th, td {
     border: 1px solid black;
 }

@@ -19,7 +19,7 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $users = $result->fetch_all(MYSQLI_ASSOC);
 
-// actions
+// GET actions
 //   delete entry
 if (isset($_GET["del"])) {
     $sql = "DELETE FROM users WHERE id = ?";
@@ -29,6 +29,38 @@ if (isset($_GET["del"])) {
     if (!mysqli_stmt_execute($stmt) || mysqli_stmt_affected_rows($stmt) != 1) {
         echo "SQL error.";
     } else header("location: ".$_SERVER['SCRIPT_NAME']);
+}
+
+// POST actions
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // add entry
+    if (isset($_POST["add"])) {
+        $sql = "INSERT INTO users (username, email, password, verifycode, type, status) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($link, $sql);
+        mysqli_stmt_bind_param($stmt, "ssssss", $param_username, $param_email, $param_password, $param_verifycode, $param_type, $param_status);
+        $param_username = $_POST["username"];
+        $param_email= $_POST["email"];
+        $param_password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+        $param_verifycode = base64_encode(random_bytes(12));
+        $param_type = $_POST["type"];
+        $param_status = $_POST["status"];
+
+        if (!mysqli_stmt_execute($stmt) || (mysqli_stmt_affected_rows($stmt) != 1)) {
+            echo "SQL error.";
+        } else header("location: ".$_SERVER['SCRIPT_NAME']);
+    }
+
+    //   edit entry
+
+}
+
+function getuserbyid($id) {
+    global $users;
+    foreach ($users as $user) {
+        if ($user["id"] == $id) {
+            return $user;
+        }
+    }
 }
 
 ?>
@@ -50,8 +82,34 @@ if (isset($_GET["del"])) {
                 <div class="col8">
                     <h2 class="center">ARFNET Client Service Ticket and Invoice Management System</h2>
                     <h3><?php echo strtoupper($type[0]).substr($type, 1); ?> panel</h3>
-                    
                     <h3>Users</h3>
+
+                    <?php
+                    if (isset($_GET["edit"])) {
+                        $user = getuserbyid($_GET["edit"]);
+                        echo "<div class=\"editform\"><h3>Edit user ".$user["id"]."</h3><form action=\"/manageusers.php\" method=\"post\">\n"
+                            ."<label>Username</label><br><input type=\"text\" name=\"username\" value=\"".$user["username"]."\"><br>\n"
+                            ."<label>Email</label><br><input type=\"text\" name=\"email\" value=\"".$user["email"]."\"><br>\n"
+                            ."<label>Password (empty is unchanged)</label><br><input type=\"text\" name=\"email\"><br>\n"
+                            ."<label>Type</label><br><input type=\"text\" name=\"type\" value=\"".$user["type"]."\"><br>\n"
+                            ."<label>Status</label><br><input type=\"text\" name=\"status\" value=\"".$user["status"]."\"><br>\n"
+                            ."<br><input type=\"submit\" name=\"save\" value=\"Save\"><a href=\"/manageusers.php\">cancel</a>"
+                            ."</form></div>";
+                    }
+
+                    if (isset($_GET["add"])) {
+                        echo "<div class=\"editform\"><h3>Add user</h3><form action=\"/manageusers.php\" method=\"post\">\n"
+                            ."<label>Username</label><br><input type=\"text\" name=\"username\"><br>\n"
+                            ."<label>Email</label><br><input type=\"text\" name=\"email\"><br>\n"
+                            ."<label>Password</label><br><input type=\"text\" name=\"password\"><br>\n"
+                            ."<label>Type</label><br><input type=\"text\" name=\"type\"><br>\n"
+                            ."<label>Status</label><br><input type=\"text\" name=\"status\"><br>\n"
+                            ."<br><input type=\"submit\" name=\"add\" value=\"Add\"><a href=\"/manageusers.php\">cancel</a>"
+                            ."</form></div>";
+                    }
+                    ?>
+
+                    <a href="?add">add</a>
                     <table>
                         <tr><th>id</th><th>user</th><th>password</th><th>email</th><th>verifycode</th><th>type</th><th>regdate</th><th>status</th><th>action</th></tr>
                         <?php

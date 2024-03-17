@@ -16,7 +16,7 @@ $username = $password = "";
 $username_err = $password_err = "";
  
 // Processing form data when form is submitted
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate username
     if (empty($_POST["username"]))
         $username_err = "Enter a username.";
