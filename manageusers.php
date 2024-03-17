@@ -91,8 +91,8 @@ function getuserbyid($id) {
                             ."<label>Username</label><br><input type=\"text\" name=\"username\" value=\"".$user["username"]."\"><br>\n"
                             ."<label>Email</label><br><input type=\"text\" name=\"email\" value=\"".$user["email"]."\"><br>\n"
                             ."<label>Password (empty is unchanged)</label><br><input type=\"text\" name=\"email\"><br>\n"
-                            ."<label>Type</label><br><input type=\"text\" name=\"type\" value=\"".$user["type"]."\"><br>\n"
-                            ."<label>Status</label><br><input type=\"text\" name=\"status\" value=\"".$user["status"]."\"><br>\n"
+                            ."<label>Type</label><br><select name=\"type\"><option value=\"client\" ".($user["type"] == "client" ? "selected" : "").">client</option><option value=\"helpdesk\" ".($user["type"] == "helpdesk" ? "selected" : "").">helpdesk</option><option value=\"accountant\" ".($user["type"] == "accountant" ? "selected" : "").">accountant</option><option value=\"admin\" ".($user["type"] == "admin" ? "selected" : "").">admin</option></select><br>\n"
+                            ."<label>Status</label><br><select name=\"status\"><option value=\"unverified\" ".($user["status"] == "unverified" ? "selected" : "").">unverified</option><option value=\"verified\" ".($user["status"] == "verified" ? "selected" : "").">verified</option></select><br>\n"
                             ."<br><input type=\"submit\" name=\"save\" value=\"Save\"><a href=\"/manageusers.php\">cancel</a>"
                             ."</form></div>";
                     }
@@ -102,8 +102,8 @@ function getuserbyid($id) {
                             ."<label>Username</label><br><input type=\"text\" name=\"username\"><br>\n"
                             ."<label>Email</label><br><input type=\"text\" name=\"email\"><br>\n"
                             ."<label>Password</label><br><input type=\"text\" name=\"password\"><br>\n"
-                            ."<label>Type</label><br><input type=\"text\" name=\"type\"><br>\n"
-                            ."<label>Status</label><br><input type=\"text\" name=\"status\"><br>\n"
+                            ."<label>Type</label><br><select name=\"type\"><option value=\"client\">client</option><option value=\"helpdesk\">helpdesk</option><option value=\"accountant\">accountant</option><option value=\"admin\">admin</option></select><br>\n"
+                            ."<label>Status</label><br><select name=\"status\"><option value=\"unverified\">unverified</option><option value=\"verified\">verified</option></select><br>\n"
                             ."<br><input type=\"submit\" name=\"add\" value=\"Add\"><a href=\"/manageusers.php\">cancel</a>"
                             ."</form></div>";
                     }
