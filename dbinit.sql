@@ -16,7 +16,7 @@ CREATE TABLE `arfnet2`.`services` (
     `id` INT NOT NULL AUTO_INCREMENT ,
     `name` VARCHAR(255) NOT NULL ,
     `type` ENUM('free','standard','premium') NOT NULL ,
-    `billing` DECIMAL NOT NULL ,
+    `billing` TEXT NOT NULL ,
     `description` TEXT NOT NULL ,
     PRIMARY KEY (`id`)
 );

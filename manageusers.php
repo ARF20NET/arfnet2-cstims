@@ -10,6 +10,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 $username = $_SESSION["username"];
 $type = $_SESSION["type"];
 
+if ($type != "admin") die("Permission denied.");
+
 require_once "config.php";
 
 // Get users
@@ -27,7 +29,7 @@ if (isset($_GET["del"])) {
     mysqli_stmt_bind_param($stmt, "s", $param_id);
     $param_id = $_GET["del"];
     if (!mysqli_stmt_execute($stmt) || mysqli_stmt_affected_rows($stmt) != 1) {
-        echo "SQL error.";
+        echo "SQL error: ".mysqli_stmt_error($stmt);
     } else header("location: ".$_SERVER['SCRIPT_NAME']);
 }
 
@@ -46,12 +48,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $param_status = $_POST["status"];
 
         if (!mysqli_stmt_execute($stmt) || (mysqli_stmt_affected_rows($stmt) != 1)) {
-            echo "SQL error.";
+            echo "SQL error: ".mysqli_stmt_error($stmt);
         } else header("location: ".$_SERVER['SCRIPT_NAME']);
     }
 
-    //   edit entry
+    // edit entry
+    if (isset($_POST["save"])) {
+        $sql = "UPDATE users SET username = ?, email = ?, password = ?, type = ?, status = ? WHERE id = ?";
+        $stmt = mysqli_prepare($link, $sql);
+        mysqli_stmt_bind_param($stmt, "ssssss", $param_username, $param_email, $param_password, $param_type, $param_status, $param_id);
+        $param_username = $_POST["username"];
+        $param_email = $_POST["email"];
+        $param_password = empty($_POST["password"]) ? getuserbyid($_POST["id"])["password"] : password_hash($_POST["password"], PASSWORD_DEFAULT);
+        $param_type = $_POST["type"];
+        $param_status = $_POST["status"];
+        $param_id = $_POST["id"];
 
+        if (!mysqli_stmt_execute($stmt) || (mysqli_stmt_affected_rows($stmt) != 1)) {
+            echo "email: ".$_POST["email"];
+            echo "SQL error: ".mysqli_stmt_error($stmt);
+        } else header("location: ".$_SERVER['SCRIPT_NAME']);
+    }
 }
 
 function getuserbyid($id) {
@@ -87,24 +104,25 @@ function getuserbyid($id) {
                     <?php
                     if (isset($_GET["edit"])) {
                         $user = getuserbyid($_GET["edit"]);
-                        echo "<div class=\"editform\"><h3>Edit user ".$user["id"]."</h3><form action=\"/manageusers.php\" method=\"post\">\n"
+                        echo "<div class=\"editform\"><h3>Edit user ".$user["id"]."</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
                             ."<label>Username</label><br><input type=\"text\" name=\"username\" value=\"".$user["username"]."\"><br>\n"
                             ."<label>Email</label><br><input type=\"text\" name=\"email\" value=\"".$user["email"]."\"><br>\n"
-                            ."<label>Password (empty is unchanged)</label><br><input type=\"text\" name=\"email\"><br>\n"
+                            ."<label>Password (empty is unchanged)</label><br><input type=\"text\" name=\"password\"><br>\n"
                             ."<label>Type</label><br><select name=\"type\"><option value=\"client\" ".($user["type"] == "client" ? "selected" : "").">client</option><option value=\"helpdesk\" ".($user["type"] == "helpdesk" ? "selected" : "").">helpdesk</option><option value=\"accountant\" ".($user["type"] == "accountant" ? "selected" : "").">accountant</option><option value=\"admin\" ".($user["type"] == "admin" ? "selected" : "").">admin</option></select><br>\n"
                             ."<label>Status</label><br><select name=\"status\"><option value=\"unverified\" ".($user["status"] == "unverified" ? "selected" : "").">unverified</option><option value=\"verified\" ".($user["status"] == "verified" ? "selected" : "").">verified</option></select><br>\n"
-                            ."<br><input type=\"submit\" name=\"save\" value=\"Save\"><a href=\"/manageusers.php\">cancel</a>"
+                            ."<input type=\"hidden\" name=\"id\" value=\"".$user["id"]."\">"
+                            ."<br><input type=\"submit\" name=\"save\" value=\"Save\"><a href=\"".$_SERVER['SCRIPT_NAME']."\">cancel</a>"
                             ."</form></div>";
                     }
 
                     if (isset($_GET["add"])) {
-                        echo "<div class=\"editform\"><h3>Add user</h3><form action=\"/manageusers.php\" method=\"post\">\n"
+                        echo "<div class=\"editform\"><h3>Add user</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
                             ."<label>Username</label><br><input type=\"text\" name=\"username\"><br>\n"
                             ."<label>Email</label><br><input type=\"text\" name=\"email\"><br>\n"
                             ."<label>Password</label><br><input type=\"text\" name=\"password\"><br>\n"
                             ."<label>Type</label><br><select name=\"type\"><option value=\"client\">client</option><option value=\"helpdesk\">helpdesk</option><option value=\"accountant\">accountant</option><option value=\"admin\">admin</option></select><br>\n"
                             ."<label>Status</label><br><select name=\"status\"><option value=\"unverified\">unverified</option><option value=\"verified\">verified</option></select><br>\n"
-                            ."<br><input type=\"submit\" name=\"add\" value=\"Add\"><a href=\"/manageusers.php\">cancel</a>"
+                            ."<br><input type=\"submit\" name=\"add\" value=\"Add\"><a href=\"".$_SERVER['SCRIPT_NAME']."\">cancel</a>"
                             ."</form></div>";
                     }
                     ?>
