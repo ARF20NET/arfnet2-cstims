@@ -1,0 +1,103 @@
+Services:
+    Free:
+        matrix, xmpp
+    Standard:
+        email, voip, jellyfin, nextcloud
+    Premium
+        VPS, VPN, webhost, bot host, game host, proxy, mirror, storage, subname
+
+VPS
+Price: 1*vCPU + 0.50*GBRAM + 0.05*GBSSD €
+Desc:
+    KVM shared VM in our Proxmox node
+    Price may vary by specifications
+    Entitled to
+    - a few ports (>1024) in shared public v4 address
+    - whole IPv6 address via HE.net
+    Up to
+    - 8GB RAM
+    - 4vCPUs
+    - 30GB SSD, optional HDD
+    - debian12 or custom provided ISO
+    Bandwidth is shared
+
+VPN
+Price: 5€/mo
+Desc:
+    Wireguard connection to ARFNET network, shared public IPv4
+    Isolated VPN network
+    Optional HE IPv6
+
+webhost
+Price: 1€/mo
+Desc:
+    nginx vhost in main web VM
+    PHP and MySQL
+    IPv4 and v6
+
+webhost
+Price: 0.75€/mo
+Desc:
+    Telegram, discord, matrix, IRC, whatever
+
+gamehost
+Price: 1-10€/mo
+Desc:
+    Minecraft, csgo, whatever
+    Price may vary by game's weight and load
+
+proxy
+Price: 0.5€/mo
+Desc:
+    Reverse proxies a site
+    Main nginx vhost proxy
+    IPv4 and v6
+
+mirror
+Price: 1 + 0.005*GB^2
+Desc:
+    Mirror files on https://ftp.arf20.com
+    Stored on RAID HDD vault
+
+storage
+Price: 1 + 0.005*GB^2
+Desc:
+    Up/download files via FTP, SFTP or rsync
+    Stored on RAID HDD vault
+
+subname
+Price: 0.5€/mo or 6€/y
+    Subname in arf20.com
+    DNS provided by our nameservers
+
+
+email
+Price: 1€/mo
+    Email account in @arf20.com
+    IMAP/SMTP mail.arf20.com (postfix/dovecot)
+    No SPAM filter
+    100MB max storage
+    Accesible via any IMAP/SMTP client and https://jellyfin.arf20.com
+
+voip
+Price: 2€/mo
+Desc:
+    CURRENTLY DOWN!
+    SIP VoIP access to ARFNET and SDF networks
+
+jellyfin
+Price: 2€/mo
+Desc:
+    Unlimited jellyfin account with access to all ARFNET media
+    No transcoding
+    https://jellyfin.arf20.com
+
+nextcloud
+Price: 5€/mo
+Desc:
+    Nextcloud account up to 10GB storage
+    https://nextcloud.arf20.com
+
+matrix
+
+xmpp

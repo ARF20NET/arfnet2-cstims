@@ -6,9 +6,9 @@ CREATE TABLE `arfnet2`.`users` (
     `password` VARCHAR(255) NOT NULL ,
     `email` VARCHAR(127) NOT NULL ,
     `verifycode` VARCHAR(31) NOT NULL ,
-    `status` ENUM('verified','unverified') NOT NULL DEFAULT 'unverified' ,
     `type` ENUM('client','helpdesk','accountant','admin') NOT NULL ,
     `regdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `status` ENUM('verified','unverified') NOT NULL DEFAULT 'unverified' ,
     PRIMARY KEY (`id`)
 );
 
@@ -28,6 +28,7 @@ CREATE TABLE `arfnet2`.`orders` (
     `client` INT NOT NULL ,
     `billing` VARCHAR(255) NOT NULL ,
     `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `status` ENUM('active','inactive') NOT NULL ,
     `comments` TEXT NOT NULL ,
     PRIMARY KEY (`id`)
 );

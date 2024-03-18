@@ -31,7 +31,7 @@ $result = mysqli_stmt_get_result($stmt);
 $services = $result->fetch_all(MYSQLI_ASSOC);
 
 // Get orders
-$sql = "SELECT id, service, name, client, date, billing, comments FROM orders";
+$sql = "SELECT id, service, name, client, date, billing, status, comments FROM orders";
 $stmt = mysqli_prepare($link, $sql);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
@@ -69,11 +69,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // edit entry
     if (isset($_POST["save"])) {
-        $sql = "UPDATE orders SET name = ?, billing = ?, comments = ? WHERE id = ?";
+        $sql = "UPDATE orders SET name = ?, billing = ?, status = ?, comments = ? WHERE id = ?";
         $stmt = mysqli_prepare($link, $sql);
-        mysqli_stmt_bind_param($stmt, "ssss", $param_name, $param_billing, $param_comments, $param_id);
+        mysqli_stmt_bind_param($stmt, "sssss", $param_name, $param_billing, $param_status, $param_comments, $param_id);
         $param_name = $_POST["name"];
         $param_billing = $_POST["billing"];
+        $param_status = $_POST["status"];
         $param_comments = $_POST["comments"];
         $param_id = $_POST["id"];
 
@@ -134,9 +135,15 @@ function getclientbyid($id) {
                     <?php
                     if (isset($_GET["edit"])) {
                         $order = getorderbyid($_GET["edit"]);
+                        $client_options = $service_options = "";
+                        /*foreach ($clients as $client)
+                            $client_options .= "<option value=\"".$client["id"]."\" ".($client["id"] == $order["client"] ? "selected" : "").">".$client["username"]."</option>";
+                        foreach ($services as $service)
+                            $service_options .= "<option value=\"".$service["id"]."\" ".($service["id"] == $order["service"] ? "selected" : "").">".$service["name"]."</option>";*/
                         echo "<div class=\"editform\"><h3>Edit order ".$order["id"]."</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
                             ."<label>Name</label><br><input type=\"text\" name=\"name\" value=\"".$order["name"]."\"><br>\n"
                             ."<label>Billing</label><br><input type=\"text\" name=\"billing\" value=\"".$order["billing"]."\"><br>\n"
+                            ."<label>Status</label><br><select name=\"status\"><option value=\"active\" ".($service["status"] == "active" ? "selected" : "").">active</option><option value=\"inactive\" ".($service["status"] == "inactive" ? "selected" : "").">inactive</option></select><br>\n"
                             ."<label>Comments</label><br><textarea name=\"comments\" rows=\"10\" cols=\"80\">".$order["comments"]."</textarea><br>\n"
                             ."<input type=\"hidden\" name=\"id\" value=\"".$order["id"]."\">"
                             ."<br><input type=\"submit\" name=\"save\" value=\"Save\"><a href=\"".$_SERVER['SCRIPT_NAME']."\">cancel</a>"
@@ -154,6 +161,7 @@ function getclientbyid($id) {
                             ."<label>Name</label><br><input type=\"text\" name=\"name\"><br>\n"
                             ."<label>Client</label><br><select name=\"client\">".$client_options."</select><br>\n"
                             ."<label>Billing</label><br><input type=\"text\" name=\"billing\"><br>\n"
+                            ."<label>Status</label><br><select name=\"status\"><option value=\"active\">active</option><option value=\"inactive\">inactive</option></select><br>\n"
                             ."<label>Comments</label><br><textarea name=\"comments\" rows=\"10\" cols=\"80\"></textarea><br>\n"
                             ."<br><input type=\"submit\" name=\"add\" value=\"Add\"><a href=\"".$_SERVER["SCRIPT_NAME"]."\">cancel</a>"
                             ."</form></div>";
@@ -162,7 +170,7 @@ function getclientbyid($id) {
 
                     <a href="?add">add</a>
                     <table>
-                        <tr><th>id</th><th>service</th><th>instance</th><th>client</th><th>billing</th><th>date</th><th>comments</th><th>action</th></tr>
+                        <tr><th>id</th><th>service</th><th>instance</th><th>client</th><th>billing</th><th>date</th><th>status</th><th>comments</th><th>action</th></tr>
                         <?php
                         foreach ($orders as $order) {
                             echo "<tr><td>".$order["id"]."</td>"
@@ -171,6 +179,7 @@ function getclientbyid($id) {
                             ."<td>".getclientbyid($order["client"])["username"]."</td>"
                             ."<td>".$order["billing"]."</td>"
                             ."<td>".$order["date"]."</td>"
+                            ."<td>".$order["status"]."</td>"
                             ."<td><pre>".$order["comments"]."</pre></td>"
                             ."<td><a href=\"?del=".$order["id"]."\">del</a> <a href=\"?edit=".$order["id"]."\">edit</a></td></tr>\n";
                         }

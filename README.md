@@ -11,9 +11,6 @@ User types:
     Client:     order services and open tickets
 Service types:
     premium, standard, free
-Services:
-    VPS, VPN, webhost, bot host, game host, proxy, mirror, subdomain, storage,
-    nextcloud, jellyfin, email, matrix, xmpp, voip
 
 Report problems with CST or such as password changes to admin@arf20.com
 

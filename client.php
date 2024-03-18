@@ -7,10 +7,36 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     exit;
 }
 
+$clientid = $_SESSION["id"];
 $username = $_SESSION["username"];
 $type = $_SESSION["type"];
 
 require_once "config.php";
+
+// Get orders
+$sql = "SELECT id, service, name, billing FROM orders WHERE client = ?";
+$stmt = mysqli_prepare($link, $sql);
+mysqli_stmt_bind_param($stmt, "s", $param_client);
+$param_client = $clientid;
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$orders = $result->fetch_all(MYSQLI_ASSOC);
+
+// Get services
+$sql = "SELECT id, name, type, billing FROM services";
+$stmt = mysqli_prepare($link, $sql);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$services = $result->fetch_all(MYSQLI_ASSOC);
+
+function getservicebyid($id) {
+    global $services;
+    foreach ($services as $service) {
+        if ($service["id"] == $id) {
+            return $service;
+        }
+    }
+}
 
 ?>
 
@@ -34,7 +60,14 @@ require_once "config.php";
                     <div class="row">
                         <div class="col5">
                             <h3>Active services</h3>
-                            <!-- TODO PHP list of services -->
+                            <table>
+                                <tr><th>service</th><th>instance</th><th>billing</th></tr>
+                                <?php
+                                foreach ($orders as $order) {
+                                    echo "<tr><td>".getservicebyid($order["service"])["name"]."</td><td>".$order["name"]."</td><td>".$order["billing"]."</tr>\n";
+                                }
+                                ?>
+                            </table>
                         </div>
                         <div class="col5">
                             <h3>Tickets</h3>
