@@ -140,7 +140,7 @@ function getclientbyid($id) {
                             $client_options .= "<option value=\"".$client["id"]."\" ".($client["id"] == $order["client"] ? "selected" : "").">".$client["username"]."</option>";
                         foreach ($services as $service)
                             $service_options .= "<option value=\"".$service["id"]."\" ".($service["id"] == $order["service"] ? "selected" : "").">".$service["name"]."</option>";*/
-                        echo "<div class=\"editform\"><h3>Edit order ".$order["id"]."</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
+                        echo "<div class=\"form\"><h3>Edit order ".$order["id"]."</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
                             ."<label>Name</label><br><input type=\"text\" name=\"name\" value=\"".$order["name"]."\"><br>\n"
                             ."<label>Billing</label><br><input type=\"text\" name=\"billing\" value=\"".$order["billing"]."\"><br>\n"
                             ."<label>Status</label><br><select name=\"status\"><option value=\"active\" ".($service["status"] == "active" ? "selected" : "").">active</option><option value=\"inactive\" ".($service["status"] == "inactive" ? "selected" : "").">inactive</option></select><br>\n"
@@ -156,7 +156,7 @@ function getclientbyid($id) {
                             $client_options .= "<option value=\"".$client["id"]."\">".$client["username"]."</option>";
                         foreach ($services as $service)
                             $service_options .= "<option value=\"".$service["id"]."\">".$service["name"]."</option>";
-                        echo "<div class=\"editform\"><h3>Add order</h3><form action=\"".$_SERVER["SCRIPT_NAME"]."\" method=\"post\">\n"
+                        echo "<div class=\"form\"><h3>Add order</h3><form action=\"".$_SERVER["SCRIPT_NAME"]."\" method=\"post\">\n"
                             ."<label>Service</label><br><select name=\"service\">".$service_options."</select><br>"
                             ."<label>Name</label><br><input type=\"text\" name=\"name\"><br>\n"
                             ."<label>Client</label><br><select name=\"client\">".$client_options."</select><br>\n"

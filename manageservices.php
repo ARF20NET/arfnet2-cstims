@@ -100,7 +100,7 @@ function getservicebyid($id) {
                     <?php
                     if (isset($_GET["edit"])) {
                         $service = getservicebyid($_GET["edit"]);
-                        echo "<div class=\"editform\"><h3>Edit service ".$service["id"]."</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
+                        echo "<div class=\"form\"><h3>Edit service ".$service["id"]."</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
                             ."<label>Name</label><br><input type=\"text\" name=\"name\" value=\"".$service["name"]."\"><br>\n"
                             ."<label>Type</label><br><select name=\"type\"><option value=\"free\" ".($service["type"] == "free" ? "selected" : "").">free</option><option value=\"standard\" ".($service["type"] == "standard" ? "selected" : "").">standard</option><option value=\"premium\" ".($service["type"] == "premium" ? "selected" : "").">premium</option></select><br>\n"
                             ."<label>Billing</label><br><input type=\"text\" name=\"billing\" value=\"".$service["billing"]."\"><br>\n"
@@ -111,7 +111,7 @@ function getservicebyid($id) {
                     }
 
                     if (isset($_GET["add"])) {
-                        echo "<div class=\"editform\"><h3>Add service</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
+                        echo "<div class=\"form\"><h3>Add service</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
                             ."<label>Name</label><br><input type=\"text\" name=\"name\"><br>\n"
                             ."<label>Type</label><br><select name=\"type\"><option value=\"free\">free</option><option value=\"standard\">standard</option><option value=\"premium\">premium</option></select><br>\n"
                             ."<label>Billing</label><br><input type=\"text\" name=\"billing\"><br>\n"

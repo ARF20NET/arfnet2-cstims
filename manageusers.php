@@ -103,7 +103,7 @@ function getuserbyid($id) {
                     <?php
                     if (isset($_GET["edit"])) {
                         $user = getuserbyid($_GET["edit"]);
-                        echo "<div class=\"editform\"><h3>Edit user ".$user["id"]."</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
+                        echo "<div class=\"form\"><h3>Edit user ".$user["id"]."</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
                             ."<label>Username</label><br><input type=\"text\" name=\"username\" value=\"".$user["username"]."\"><br>\n"
                             ."<label>Email</label><br><input type=\"text\" name=\"email\" value=\"".$user["email"]."\"><br>\n"
                             ."<label>Password (empty is unchanged)</label><br><input type=\"text\" name=\"password\"><br>\n"
@@ -115,7 +115,7 @@ function getuserbyid($id) {
                     }
 
                     if (isset($_GET["add"])) {
-                        echo "<div class=\"editform\"><h3>Add user</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
+                        echo "<div class=\"form\"><h3>Add user</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
                             ."<label>Username</label><br><input type=\"text\" name=\"username\"><br>\n"
                             ."<label>Email</label><br><input type=\"text\" name=\"email\"><br>\n"
                             ."<label>Password</label><br><input type=\"text\" name=\"password\"><br>\n"
