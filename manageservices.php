@@ -49,6 +49,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "SQL error.";
         } else header("location: ".$_SERVER['SCRIPT_NAME']);
     }
+
+    // edit entry
+    if (isset($_POST["save"])) {
+        $sql = "UPDATE services SET name = ?, type = ?, billing = ?, description = ? WHERE id = ?";
+        $stmt = mysqli_prepare($link, $sql);
+        mysqli_stmt_bind_param($stmt, "sssss", $param_name, $param_type, $param_billing, $param_description, $param_id);
+        $param_name = $_POST["name"];
+        $param_type = $_POST["type"];
+        $param_billing = $_POST["billing"];
+        $param_description = $_POST["description"];
+        $param_id = $_POST["id"];
+
+        if (!mysqli_stmt_execute($stmt) || (mysqli_stmt_affected_rows($stmt) != 1)) {
+            echo "SQL error.";
+        } else header("location: ".$_SERVER['SCRIPT_NAME']);
+    }
 }
 
 function getservicebyid($id) {
@@ -86,9 +102,10 @@ function getservicebyid($id) {
                         $service = getservicebyid($_GET["edit"]);
                         echo "<div class=\"editform\"><h3>Edit service ".$service["id"]."</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
                             ."<label>Name</label><br><input type=\"text\" name=\"name\" value=\"".$service["name"]."\"><br>\n"
-                            ."<label>Type</label><br><select name=\"type\"><option value=\"free\" ".($service["type"] == "free" ? "selected" : "").">free</option><option value=\"standard\" ".($user["type"] == "standard" ? "selected" : "").">standard</option><option value=\"premium\" ".($user["type"] == "premium" ? "selected" : "").">premium</option></select><br>\n"
+                            ."<label>Type</label><br><select name=\"type\"><option value=\"free\" ".($service["type"] == "free" ? "selected" : "").">free</option><option value=\"standard\" ".($service["type"] == "standard" ? "selected" : "").">standard</option><option value=\"premium\" ".($service["type"] == "premium" ? "selected" : "").">premium</option></select><br>\n"
                             ."<label>Billing</label><br><input type=\"text\" name=\"billing\" value=\"".$service["billing"]."\"><br>\n"
-                            ."<label>Description</label><br><textarea name=\"description\" rows=\"10\" cols=\"80\" value=\"".$service["description"]."\"><br>\n"
+                            ."<label>Description</label><br><textarea name=\"description\" rows=\"10\" cols=\"80\">".$service["description"]."</textarea><br>\n"
+                            ."<input type=\"hidden\" name=\"id\" value=\"".$service["id"]."\">"
                             ."<br><input type=\"submit\" name=\"save\" value=\"Save\"><a href=\"".$_SERVER['SCRIPT_NAME']."\">cancel</a>"
                             ."</form></div>";
                     }
@@ -118,7 +135,6 @@ function getservicebyid($id) {
                         }
                         ?>
                     </table>
-                        
                 </div>
                 <div class="col2">
                     <h3>Logged as <?php echo $username; ?></h3>

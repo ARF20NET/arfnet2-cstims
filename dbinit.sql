@@ -20,3 +20,14 @@ CREATE TABLE `arfnet2`.`services` (
     `description` TEXT NOT NULL ,
     PRIMARY KEY (`id`)
 );
+
+CREATE TABLE `arfnet2`.`orders` (
+    `id` INT NOT NULL AUTO_INCREMENT ,
+    `service` INT NOT NULL ,
+    `name` VARCHAR(255) NOT NULL ,
+    `client` INT NOT NULL ,
+    `billing` VARCHAR(255) NOT NULL ,
+    `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `comments` TEXT NOT NULL ,
+    PRIMARY KEY (`id`)
+);

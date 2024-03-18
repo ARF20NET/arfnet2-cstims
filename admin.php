@@ -26,6 +26,13 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $services = $result->fetch_all(MYSQLI_ASSOC);
 
+// Get services
+$sql = "SELECT id, service, name, client FROM orders";
+$stmt = mysqli_prepare($link, $sql);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$orders = $result->fetch_all(MYSQLI_ASSOC);
+
 ?>
 
 <!doctype html>
@@ -70,7 +77,14 @@ $services = $result->fetch_all(MYSQLI_ASSOC);
                         </div>
                         <div class="col2">
                             <h3>Orders</h3>
-                            <!-- TODO PHP list of services -->
+                            <table>
+                                <tr><th>service</th><th>instance</th><th>client</th></tr>
+                                <?php
+                                foreach ($orders as $order) {
+                                    echo "<tr><td>".$order['service']."</td><td>".$order['name']."</td><td>".$order['client']."</tr>\n";
+                                }
+                                ?>
+                            </table>
                         </div>
                         <div class="col2">
                             <h3>Tickets</h3>

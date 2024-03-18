@@ -65,7 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $param_id = $_POST["id"];
 
         if (!mysqli_stmt_execute($stmt) || (mysqli_stmt_affected_rows($stmt) != 1)) {
-            echo "email: ".$_POST["email"];
             echo "SQL error: ".mysqli_stmt_error($stmt);
         } else header("location: ".$_SERVER['SCRIPT_NAME']);
     }
