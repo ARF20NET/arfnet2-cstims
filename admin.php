@@ -63,7 +63,7 @@ $services = $result->fetch_all(MYSQLI_ASSOC);
                                 <tr><th>name</th><th>type</th><th>billing</th></tr>
                                 <?php
                                 foreach ($services as $service) {
-                                    echo "<tr><td>".$service['name']."</td><td>".$service['type']."</td><td>".$service['billing']."€/mo</tr>\n";
+                                    echo "<tr><td>".$service['name']."</td><td>".$service['type']."</td><td>".$service['billing']."</tr>\n";
                                 }
                                 ?>
                             </table>

@@ -21,6 +21,9 @@ if($link === false){
     die("ERROR: Could not connect. " . mysqli_connect_error());
 }
 
+require("/usr/share/php/libphp-phpmailer/autoload.php");
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
 $mailer = new PHPMailer();
 $mailer->isSMTP();
 $mailer->SMTPDebug = SMTP::DEBUG_SERVER;
