@@ -12,6 +12,8 @@ define('MAIL_PORT', 587);
 define('MAIL_USER', 'user');
 define('MAIL_PASSWORD', 'password');
 define('MAIL_FROM', 'system@example.com');
+
+define('DOMAIN', 'dash.example.com');
  
 /* Attempt to connect to MySQL database */
 $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
