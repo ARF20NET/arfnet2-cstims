@@ -28,7 +28,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 $mailer = new PHPMailer();
 $mailer->isSMTP();
-$mailer->SMTPDebug = SMTP::DEBUG_SERVER;
 $mailer->Host = MAIL_SERVER;
 $mailer->Port = MAIL_PORT;
 $mailer->SMTPAuth = true;
