@@ -22,6 +22,10 @@ body {
     font-size: 150%;
 }
 
+.col {
+    float: left;
+}
+
 .col5 {
     float: left;
     width: 50%;

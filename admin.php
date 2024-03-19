@@ -10,6 +10,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 $username = $_SESSION["username"];
 $type = $_SESSION["type"];
 
+if ($type != "admin") die("Permission denied.");
+
 require_once "config.php";
 
 // Get users
@@ -32,6 +34,24 @@ $stmt = mysqli_prepare($link, $sql);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $orders = $result->fetch_all(MYSQLI_ASSOC);
+
+function getservicebyid($id) {
+    global $services;
+    foreach ($services as $service) {
+        if ($service["id"] == $id) {
+            return $service;
+        }
+    }
+}
+
+function getclientbyid($id) {
+    global $users;
+    foreach ($users as $client) {
+        if ($client["id"] == $id) {
+            return $client;
+        }
+    }
+}
 
 ?>
 
@@ -59,7 +79,7 @@ $orders = $result->fetch_all(MYSQLI_ASSOC);
                                 <tr><th>user</th><th>type</th><th>status</th></tr>
                                 <?php
                                 foreach ($users as $user) {
-                                    echo "<tr><td>".$user['username']."</td><td>".$user['type']."</td><td>".$user['status']."</tr>\n";
+                                    echo "<tr><td>".$user["username"]."</td><td>".$user["type"]."</td><td>".$user["status"]."</tr>\n";
                                 }
                                 ?>
                             </table>
@@ -70,7 +90,7 @@ $orders = $result->fetch_all(MYSQLI_ASSOC);
                                 <tr><th>name</th><th>type</th><th>billing</th></tr>
                                 <?php
                                 foreach ($services as $service) {
-                                    echo "<tr><td>".$service['name']."</td><td>".$service['type']."</td><td>".$service['billing']."</tr>\n";
+                                    echo "<tr><td>".$service["name"]."</td><td>".$service["type"]."</td><td>".$service["billing"]."</tr>\n";
                                 }
                                 ?>
                             </table>
@@ -81,7 +101,7 @@ $orders = $result->fetch_all(MYSQLI_ASSOC);
                                 <tr><th>service</th><th>instance</th><th>client</th></tr>
                                 <?php
                                 foreach ($orders as $order) {
-                                    echo "<tr><td>".$order['service']."</td><td>".$order['name']."</td><td>".$order['client']."</tr>\n";
+                                    echo "<tr><td>".getservicebyid($order["service"])["name"]."</td><td>".$order["name"]."</td><td>".getclientbyid($order["client"])["username"]."</tr>\n";
                                 }
                                 ?>
                             </table>
