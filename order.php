@@ -91,35 +91,26 @@ function genoption($id, $name) {
                 document.getElementById("description").innerHTML = service["description"];
                 if (service["name"] == "vps") {
                     document.getElementById("extraform").innerHTML
-                        = `<label><b>Options</b></label><br><label>Cores</label><br><select id=\"cpus\" onclick=\"calcprice()\"><option value=\"1\">1</option><option value=\"2\">2</option><option value=\"3\">3</option><option value=\"4\">4</option></select><br>
-                        <label>Memory</label><br><select id=\"mem\" onclick=\"calcprice()\"><option value=\"1\">1GB</option><option value=\"2\">2GB</option><option value=\"4\">4GB</option><option value=\"8\">8GB</option></select><br>
-                        <label>SSD</label><br><select id=\"ssd\" onclick=\"calcprice()\"><option value=\"5\">5GB</option><option value=\"10\">10GB</option><option value=\"15\">15GB</option><option value=\"20\">20GB</option><option value=\"30\">30GB</option></select><br>
+                        = `<label><b>Options</b></label><br><label>Cores</label><br><select id=\"cpus\" onclick=\"update()\"><option value=\"1\">1</option><option value=\"2\">2</option><option value=\"3\">3</option><option value=\"4\">4</option></select><br>
+                        <label>Memory</label><br><select id=\"mem\" onclick=\"update()\"><option value=\"1\">1GB</option><option value=\"2\">2GB</option><option value=\"4\">4GB</option><option value=\"8\">8GB</option></select><br>
+                        <label>SSD</label><br><select id=\"ssd\" onclick=\"update()\"><option value=\"5\">5GB</option><option value=\"10\">10GB</option><option value=\"15\">15GB</option><option value=\"20\">20GB</option><option value=\"30\">30GB</option></select><br>
                         <br><label id=\"calculated\">Calculated price: </label>`;
                 } else document.getElementById("extraform").innerHTML = "";
-                updatecomment();
-                calcprice();
+                update();
             }
 
-            function updatecomment() {
+            function update() {
                 var comment = document.getElementById("commentbox").value;
                 if (service["name"] == "vps") {
                     var cpus = document.getElementById("cpus").value;
                     var mem = document.getElementById("mem").value;
                     var ssd = document.getElementById("ssd").value;
                     document.getElementById("comments").value = "Options:\ncpus: " + cpus + "\nmem: " + mem + "GB\nssd: " + ssd + "GB\n\nClient comment:\n" + comment;
-                } else document.getElementById("comments").value = "Client comment:\n" + comment;
-            }
-
-            function calcprice() {
-                if (service["name"] == "vps") {
-                    var cpus = Number(document.getElementById("cpus").value);
-                    var mem = Number(document.getElementById("mem").value);
-                    var ssd = Number(document.getElementById("ssd").value);
-                    var price = (1*cpus**2) + (0.5*mem**2) + (0.02*ssd**2);
+                    var price = (1*Number(cpus)**2) + (0.5*Number(mem)**2) + (0.02*Number(ssd)**2);
                     document.getElementById("calculated").innerHTML = "Calculated price: " + price + " €/mo";
                     document.getElementById("billing").value = price + " €/mo";
                 } else {
-                    //document.getElementById("calculated").innerHTML = "Calculated price: " + service["billing"];
+                    document.getElementById("comments").value = "Client comment:\n" + comment;
                     document.getElementById("billing").value = service["billing"];
                 }
             }
