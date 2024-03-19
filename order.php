@@ -34,7 +34,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (!mysqli_stmt_execute($stmt) || (mysqli_stmt_affected_rows($stmt) != 1)) {
         echo "SQL error.";
-    } else header("location: ".$_SERVER['SCRIPT_NAME']);
+    } else {
+        // send admin mail
+        // Get admin mails
+        $sql = "SELECT email FROM users WHERE type = 'admin'";
+        $stmt = mysqli_prepare($link, $sql);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $admins = $result->fetch_all(MYSQLI_ASSOC);
+
+        foreach ($admins as $admin) {
+            $mailer->addAddress($admin["email"]);
+        }
+        
+        $mailer->Subject = "New service order request";
+        $mailer->Body = "Admins,\n\nUser $username requested service ".getservicebyid($_POST["service"])["name"]."\n\n"
+            ."Instance name: ".$_POST["name"]."\n"
+            ."Calculated billing: ".$_POST["billing"]."\n"
+            ."Comments:\n"
+            .$_POST["comments"]
+            ."\n\n--\nARFNET Client, Service, Ticket and Invoice Management System\nhttps://arf20.com";
+        if (!$mailer->send()) {
+            echo 'Mailer Error [ask arf20]: ' . $mailer->ErrorInfo;
+        } else header("location: ".$_SERVER['SCRIPT_NAME']);
+    }
 }
 
 function getservicebyid($id) {
@@ -61,8 +84,9 @@ function genoption($id, $name) {
         <title>ARFNET CSTIMS</title>
         <script type="text/javascript">
             var services = <?php echo json_encode($services); ?>;
+            var service;
             function selectservice(id) {
-                var service = services.find((element) => element["id"] == id);
+                service = services.find((element) => element["id"] == id);
                 document.getElementById("pricelabel").innerHTML = "Price: " + service["billing"];
                 document.getElementById("description").innerHTML = service["description"];
                 if (service["name"] == "vps") {
@@ -71,25 +95,32 @@ function genoption($id, $name) {
                         <label>Memory</label><br><select id=\"mem\" onclick=\"calcprice()\"><option value=\"1\">1GB</option><option value=\"2\">2GB</option><option value=\"3\">3GB</option><option value=\"4\">4GB</option></select><br>
                         <label>SSD</label><br><select id=\"ssd\" onclick=\"calcprice()\"><option value=\"5\">5GB</option><option value=\"10\">10GB</option><option value=\"20\">20GB</option><option value=\"30\">30GB</option></select><br>
                         <br><label id=\"calculated\">Calculated price: </label>`;
-                    document.getElementById("comments").value = comment();
-                    calcprice();
                 } else document.getElementById("extraform").innerHTML = "";
+                updatecomment();
+                calcprice();
             }
 
-            function comment() {
-                var cpus = document.getElementById("cpus").value;
-                var mem = document.getElementById("mem").value;
-                var ssd = document.getElementById("ssd").value;
-                return "cpus: " + cpus + "\nmem: " + mem + "GB\nssd: " + ssd + "GB";
+            function updatecomment() {
+                var comment = document.getElementById("commentbox").value;
+                if (service["name"] == "vps") {
+                    var cpus = document.getElementById("cpus").value;
+                    var mem = document.getElementById("mem").value;
+                    var ssd = document.getElementById("ssd").value;
+                    document.getElementById("comments").value = "Options:\ncpus: " + cpus + "\nmem: " + mem + "GB\nssd: " + ssd + "GB\n\nClient comment:\n" + comment;
+                } else document.getElementById("comments").value = "Client comment:\n" + comment;
             }
 
             function calcprice() {
-                var cpus = Number(document.getElementById("cpus").value);
-                var mem = Number(document.getElementById("mem").value);
-                var ssd = Number(document.getElementById("ssd").value);
-                var price = (1*cpus**2) + (0.5*mem**2) + (0.02*ssd**2);
-                document.getElementById("calculated").innerHTML = "Calculated price: " + price + " €/mo";
-                document.getElementById("billing").value = price + "€/mo";
+                if (service["name"] == "vps") {
+                    var cpus = Number(document.getElementById("cpus").value);
+                    var mem = Number(document.getElementById("mem").value);
+                    var ssd = Number(document.getElementById("ssd").value);
+                    var price = (1*cpus**2) + (0.5*mem**2) + (0.02*ssd**2);
+                    document.getElementById("calculated").innerHTML = "Calculated price: " + price + " €/mo";
+                } else {
+                    //document.getElementById("calculated").innerHTML = "Calculated price: " + service["billing"];
+                    document.getElementById("billing").value = service["billing"];
+                }
             }
         </script>
     </head>
@@ -143,6 +174,10 @@ function genoption($id, $name) {
                             <br><div class="border" id="extraform"></div>
                             <br><label>Instance name</label><br>
                             <input type=text name="name"><br>
+                            <div id="commentcontainer">
+                                <br><label>Comments (describe use case and requirements)</label><br>
+                                <textarea id="commentbox" rows="10" cols="80" onchange="updatecomment()"></textarea><br>
+                            </div>
                             <input type="hidden" name="billing" id="billing">
                             <input type="hidden" name="comments" id="comments">
                             <br><input type="submit" value="Place order">

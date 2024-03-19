@@ -15,10 +15,10 @@ if ($type != "admin") die("Permission denied.");
 require_once "config.php";
 
 // Get clients
-$sql = "SELECT id, username FROM users WHERE type = ?";
+$sql = "SELECT id, username FROM users WHERE type = 'client'";
 $stmt = mysqli_prepare($link, $sql);
-mysqli_stmt_bind_param($stmt, "s", $param_type);
-$param_type = "client";
+//mysqli_stmt_bind_param($stmt, "s", $param_type);
+//$param_type = "client";
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $clients = $result->fetch_all(MYSQLI_ASSOC);
