@@ -117,6 +117,7 @@ function genoption($id, $name) {
                     var ssd = Number(document.getElementById("ssd").value);
                     var price = (1*cpus**2) + (0.5*mem**2) + (0.02*ssd**2);
                     document.getElementById("calculated").innerHTML = "Calculated price: " + price + " €/mo";
+                    document.getElementById("billing").value = price + " €/mo";
                 } else {
                     //document.getElementById("calculated").innerHTML = "Calculated price: " + service["billing"];
                     document.getElementById("billing").value = service["billing"];
