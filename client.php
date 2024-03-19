@@ -14,7 +14,7 @@ $type = $_SESSION["type"];
 require_once "config.php";
 
 // Get orders
-$sql = "SELECT id, service, name, billing FROM orders WHERE client = ?";
+$sql = "SELECT id, service, name, billing, comments FROM orders WHERE client = ?";
 $stmt = mysqli_prepare($link, $sql);
 mysqli_stmt_bind_param($stmt, "s", $param_client);
 $param_client = $clientid;
@@ -61,10 +61,10 @@ function getservicebyid($id) {
                         <div class="col5">
                             <h3>Active services</h3>
                             <table>
-                                <tr><th>service</th><th>instance</th><th>billing</th></tr>
+                                <tr><th>service</th><th>instance</th><th>billing</th><th>comments</th></tr>
                                 <?php
                                 foreach ($orders as $order) {
-                                    echo "<tr><td>".getservicebyid($order["service"])["name"]."</td><td>".$order["name"]."</td><td>".$order["billing"]."</tr>\n";
+                                    echo "<tr><td>".getservicebyid($order["service"])["name"]."</td><td>".$order["name"]."</td><td>".$order["billing"]."</td><td><pre>".$order["comments"]."</pre></td></tr>\n";
                                 }
                                 ?>
                             </table>

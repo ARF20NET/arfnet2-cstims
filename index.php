@@ -1,3 +1,13 @@
+<?php
+require_once "config.php";
+// Get services
+$sql = "SELECT id, name, type, billing FROM services";
+$stmt = mysqli_prepare($link, $sql);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$services = $result->fetch_all(MYSQLI_ASSOC);
+?>
+
 <!doctype html>
 <html>
     <head>
@@ -22,7 +32,14 @@
                         </div>
                         <div class="col5">
                             <h3>Services and plans</h3>
-                            <!-- TODO PHP list of services -->
+                            <table>
+                                <tr><th>name</th><th>type</th><th>billing</th></tr>
+                                <?php
+                                foreach ($services as $service) {
+                                    echo "<tr><td>".$service["name"]."</td><td>".$service["type"]."</td><td>".$service["billing"]."</tr>\n";
+                                }
+                                ?>
+                            </table>
                         </div>
                     </div>
                 </div>
