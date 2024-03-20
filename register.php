@@ -71,8 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password_err = "Enter a password.";     
     else if (strlen($_POST["password"]) < 8)
         $password_err = "Password must have at least 8 characters.";
-    else if (preg_match("/[a-zA-Z0-9!@^*$%&)(=+çñÇ][}{\-.,_:;]+/", $_POST["password"]) != false)
-        $password_err = "Password must be in the format [a-zA-Z0-9!@^*$%&)(=+çñÇ][}{-.,_:;].";
     else
         $password = $_POST["password"];
     
@@ -94,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $param_username = $username;
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
             $param_email = $email;
-            $param_verifycode = base64_encode(random_bytes(12)); // code of size 16
+            $param_verifycode = substr(sha1(random_bytes(64)), 0, 16); // random 16 character code
             
             // Attempt to execute the prepared statement
             if (mysqli_stmt_execute($stmt)) {
@@ -151,7 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                     <div class="form-group row <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
                         <div class="column"><label>Confirm Password</label></div>
-                        <div class="column"><input type="password" name="confirm_password" class="form-control" pattern="[a-zA-Z0-9!@^*$%&)(=+çñÇ[]{}-.,_:;]+" value="<?php echo $confirm_password; ?>"></div>
+                        <div class="column"><input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>"></div>
                         <span class="help-block"><?php echo $confirm_password_err; ?></span>
                     </div>
                     <div class="form-group">

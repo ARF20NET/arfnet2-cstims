@@ -30,8 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password_err = "Enter a password.";     
     else if (strlen($_POST["password"]) < 8)
         $password_err = "Password must have at least 8 characters.";
-    else if (preg_match("/[a-zA-Z0-9!@^*$%&)(=+çñÇ][}{\-.,_:;]+/", $_POST["password"]) != false)
-        $password_err = "Password must be in the format [a-zA-Z0-9!@^*$%&)(=+çñÇ][}{-.,_:;].";
     else
         $password = $_POST["password"];
     
@@ -118,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>    
                     <div class="form-group row <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
                         <div class="column"><label>Password</label></div>
-                        <div class="column"><input type="password" name="password" pattern="[a-zA-Z0-9_]+" class="form-control"></div>
+                        <div class="column"><input type="password" name="password" class="form-control"></div>
                         <span class="help-block"><?php echo $password_err; ?></span>
                     </div>
                     <div class="form-group">
