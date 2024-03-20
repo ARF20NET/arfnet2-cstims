@@ -35,6 +35,13 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $orders = $result->fetch_all(MYSQLI_ASSOC);
 
+// Get tickets
+$sql = "SELECT id, `order`, subject FROM tickets";
+$stmt = mysqli_prepare($link, $sql);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$tickets = $result->fetch_all(MYSQLI_ASSOC);
+
 function getservicebyid($id) {
     global $services;
     foreach ($services as $service) {
@@ -49,6 +56,15 @@ function getclientbyid($id) {
     foreach ($users as $client) {
         if ($client["id"] == $id) {
             return $client;
+        }
+    }
+}
+
+function getorderbyid($id) {
+    global $orders;
+    foreach ($orders as $order) {
+        if ($order["id"] == $id) {
+            return $order;
         }
     }
 }
@@ -108,7 +124,14 @@ function getclientbyid($id) {
                         </div>
                         <div class="col2">
                             <h3>Tickets</h3>
-                            <!-- TODO PHP list of services -->
+                            <table>
+                                <tr><th>order</th><th>client</th><th>subject</th></tr>
+                                <?php
+                                foreach ($tickets as $ticket) {
+                                    echo "<tr><td>".getorderbyid($ticket["order"])["name"]."</td><td>".getclientbyid(getorderbyid($ticket["order"])["client"])["username"]."</td><td>".$ticket["subject"]."</tr>\n";
+                                }
+                                ?>
+                            </table>
                         </div>
                         <div class="col2">
                             <h3>Invoices</h3>

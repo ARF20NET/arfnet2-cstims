@@ -136,10 +136,6 @@ function getclientbyid($id) {
                     if (isset($_GET["edit"])) {
                         $order = getorderbyid($_GET["edit"]);
                         $client_options = $service_options = "";
-                        /*foreach ($clients as $client)
-                            $client_options .= "<option value=\"".$client["id"]."\" ".($client["id"] == $order["client"] ? "selected" : "").">".$client["username"]."</option>";
-                        foreach ($services as $service)
-                            $service_options .= "<option value=\"".$service["id"]."\" ".($service["id"] == $order["service"] ? "selected" : "").">".$service["name"]."</option>";*/
                         echo "<div class=\"form\"><h3>Edit order ".$order["id"]."</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
                             ."<label>Name</label><br><input type=\"text\" name=\"name\" value=\"".$order["name"]."\"><br>\n"
                             ."<label>Billing</label><br><input type=\"text\" name=\"billing\" value=\"".$order["billing"]."\"><br>\n"
