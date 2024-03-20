@@ -29,11 +29,29 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $services = $result->fetch_all(MYSQLI_ASSOC);
 
+// Get tickets
+$sql = "SELECT id, `order`, subject, body, date, status, asignee FROM tickets WHERE `order` IN (SELECT id FROM orders WHERE client = ?)";
+$stmt = mysqli_prepare($link, $sql);
+mysqli_stmt_bind_param($stmt, "s", $param_client);
+$param_client = $clientid;
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$tickets = $result->fetch_all(MYSQLI_ASSOC);
+
 function getservicebyid($id) {
     global $services;
     foreach ($services as $service) {
         if ($service["id"] == $id) {
             return $service;
+        }
+    }
+}
+
+function getorderbyid($id) {
+    global $orders;
+    foreach ($orders as $order) {
+        if ($order["id"] == $id) {
+            return $order;
         }
     }
 }
@@ -61,17 +79,24 @@ function getservicebyid($id) {
                         <div class="col5">
                             <h3>Orders</h3>
                             <table>
-                                <tr><th>service</th><th>instance</th><th>billing</th><th>comments</th><th>status</th></tr>
+                                <tr><th>instance</th><th>service</th><th>billing</th><th>comments</th><th>status</th></tr>
                                 <?php
                                 foreach ($orders as $order) {
-                                    echo "<tr><td>".getservicebyid($order["service"])["name"]."</td><td>".$order["name"]."</td><td>".$order["billing"]."</td><td><pre>".$order["comments"]."</pre></td><td>".$order["status"]."</tr>\n";
+                                    echo "<tr><td>".$order["name"]."</td><td>".getservicebyid($order["service"])["name"]."</td><td>".$order["billing"]."</td><td><details><summary></summary><pre>".$order["comments"]."</pre></details></td><td>".$order["status"]."</td></tr>\n";
                                 }
                                 ?>
                             </table>
                         </div>
                         <div class="col5">
                             <h3>Tickets</h3>
-                            <!-- TODO PHP list of services -->
+                            <table>
+                                <tr><th>order</th><th>subject</th><th>body</th><th>date</th><th>status</th></tr>
+                                <?php
+                                foreach ($tickets as $ticket) {
+                                    echo "<tr><td>".getorderbyid($ticket["order"])["name"]."</td><td>".$ticket["subject"]."</td><td><details><summary></summary><pre>".$ticket["body"]."</pre></details></td><td>".$ticket["date"]."</td><td>".$ticket["status"]."</td></tr>\n";
+                                }
+                                ?>
+                            </table>
                         </div>
                     </div>
                 </div>

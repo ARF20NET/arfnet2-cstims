@@ -192,7 +192,7 @@ function getuserbyid($id) {
                             ."<td>".getservicebyid($order["service"])["name"]."</td>"
                             ."<td>".getuserbyid(getorderbyid($ticket["order"])["client"])["username"]."</td>"
                             ."<td>".$ticket["subject"]."</td>"
-                            ."<td><pre>".$ticket["body"]."</pre></td>"
+                            ."<td><details><summary></summary><pre>".$ticket["body"]."</pre></details></td>"
                             ."<td>".$ticket["status"]."</td>"
                             ."<td>".getuserbyid($ticket["asignee"])["username"]."</td>"
                             ."<td><a href=\"?del=".$ticket["id"]."\">del</a> <a href=\"?edit=".$ticket["id"]."\">edit</a></td></tr>\n";
