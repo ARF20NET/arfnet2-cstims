@@ -130,7 +130,7 @@ function getservicebyid($id) {
                             ."<td>".$service['name']."</td>"
                             ."<td>".$service['type']."</td>"
                             ."<td>".$service['billing']."</td>"
-                            ."<td><pre>".$service['description']."</pre></td>"
+                            ."<td><details><summary></summary><pre>".$service['description']."</pre></details></td>"
                             ."<td><a href=\"?del=".$service['id']."\">del</a> <a href=\"?edit=".$service['id']."\">edit</a></td></tr>\n";
                         }
                         ?>

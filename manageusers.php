@@ -15,7 +15,7 @@ if ($type != "admin") die("Permission denied.");
 require_once "config.php";
 
 // Get users
-$sql = "SELECT id, username, password, email, verifycode, status, type, regdate FROM users";
+$sql = "SELECT id, username, email, verifycode, status, type, regdate FROM users";
 $stmt = mysqli_prepare($link, $sql);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
@@ -128,12 +128,11 @@ function getuserbyid($id) {
 
                     <a href="?add">add</a>
                     <table>
-                        <tr><th>id</th><th>user</th><th>password</th><th>email</th><th>verifycode</th><th>type</th><th>regdate</th><th>status</th><th>action</th></tr>
+                        <tr><th>id</th><th>user</th><th>email</th><th>verifycode</th><th>type</th><th>regdate</th><th>status</th><th>action</th></tr>
                         <?php
                         foreach ($users as $user) {
                             echo "<tr><td>".$user['id']."</td>"
                             ."<td>".$user['username']."</td>"
-                            ."<td>".$user['password']."</td>"
                             ."<td>".$user['email']."</td>"
                             ."<td>".$user['verifycode']."</td>"
                             ."<td>".$user['type']."</td>"

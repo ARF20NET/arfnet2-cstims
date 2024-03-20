@@ -176,7 +176,7 @@ function getclientbyid($id) {
                             ."<td>".$order["billing"]."</td>"
                             ."<td>".$order["date"]."</td>"
                             ."<td>".$order["status"]."</td>"
-                            ."<td><pre>".$order["comments"]."</pre></td>"
+                            ."<td><details><summary></summary><pre>".$order["comments"]."</pre></details></td>"
                             ."<td><a href=\"?del=".$order["id"]."\">del</a> <a href=\"?edit=".$order["id"]."\">edit</a></td></tr>\n";
                         }
                         ?>
