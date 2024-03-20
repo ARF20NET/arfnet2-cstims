@@ -151,13 +151,13 @@ function getuserbyid($id) {
                             if ($user["type"] == "admin" || $user["type"] == "helpdesk")
                                 $asignee_options .= "<option value=\"".$user["id"]."\" ".($ticket["asignee"] == $user["id"] ? "selected" : "").">".$user["username"]."</option>";
                         echo "<div class=\"form\"><h3>Edit ticket ".$ticket["id"]."</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
-                            ."<label>Instance</label><br><label>".getorderbyid($ticket["order"])["name"]."</label><br>\n"
-                            ."<label>Service</label><br><label>".getservicebyid(getorderbyid($ticket["order"])["service"])["name"]."</label><br>\n"
-                            ."<label>Client</label><br><label>".getuserbyid(getorderbyid($ticket["order"])["client"])["username"]."</label><br>\n"
-                            ."<label>Subject</label><br><label>".$ticket["subject"]."</label><br>\n"
-                            ."<label>Body</label><br><pre>".$ticket["body"]."</pre><br>\n"
-                            ."<label>Status</label><br><select name=\"status\"><option value=\"open\" ".($ticket["status"] == "open" ? "selected" : "").">open</option><option value=\"closed\" ".($order["status"] == "closed" ? "selected" : "").">closed</option></select><br>\n"
-                            ."<label>Asignee</label><br><select name=\"asignee\">$asignee_options</select><br>\n"
+                            ."<label><b>Instance</b></label><br><label>".getorderbyid($ticket["order"])["name"]."</label><br>\n"
+                            ."<label><b>Service</b></label><br><label>".getservicebyid(getorderbyid($ticket["order"])["service"])["name"]."</label><br>\n"
+                            ."<label><b>Client</b></label><br><label>".getuserbyid(getorderbyid($ticket["order"])["client"])["username"]."</label><br>\n"
+                            ."<label><b>Subject</b></label><br><label>".$ticket["subject"]."</label><br>\n"
+                            ."<label><b>Body</b></label><br><pre>".$ticket["body"]."</pre><br>\n"
+                            ."<label><b>Status</b></label><br><select name=\"status\"><option value=\"open\" ".($ticket["status"] == "open" ? "selected" : "").">open</option><option value=\"closed\" ".($order["status"] == "closed" ? "selected" : "").">closed</option></select><br>\n"
+                            ."<label><b>Asignee</b></label><br><select name=\"asignee\">$asignee_options</select><br>\n"
                             ."<input type=\"hidden\" name=\"id\" value=\"".$ticket["id"]."\">"
                             ."<br><input type=\"submit\" name=\"save\" value=\"Save\"><a href=\"".$_SERVER['SCRIPT_NAME']."\">cancel</a>"
                             ."</form></div>";
@@ -183,7 +183,7 @@ function getuserbyid($id) {
 
                     <a href="?add">add</a>
                     <table>
-                        <tr><th>id</th><th>order</th><th>service</th><th>client</th><th>subject</th><th>body</th><th>status</th><th>asignee</th><th>action</th></tr>
+                        <tr><th>id</th><th>order</th><th>service</th><th>client</th><th>subject</th><th>body</th><th>date</th><th>status</th><th>asignee</th><th>action</th></tr>
                         <?php
                         foreach ($tickets as $ticket) {
                             $order = getorderbyid($ticket["order"]);
@@ -193,6 +193,7 @@ function getuserbyid($id) {
                             ."<td>".getuserbyid(getorderbyid($ticket["order"])["client"])["username"]."</td>"
                             ."<td>".$ticket["subject"]."</td>"
                             ."<td><details><summary></summary><pre>".$ticket["body"]."</pre></details></td>"
+                            ."<td>".$ticket["date"]."</td>"
                             ."<td>".$ticket["status"]."</td>"
                             ."<td>".getuserbyid($ticket["asignee"])["username"]."</td>"
                             ."<td><a href=\"?del=".$ticket["id"]."\">del</a> <a href=\"?edit=".$ticket["id"]."\">edit</a></td></tr>\n";
