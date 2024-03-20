@@ -143,7 +143,7 @@ function getclientbyid($id) {
                         echo "<div class=\"form\"><h3>Edit order ".$order["id"]."</h3><form action=\"".$_SERVER['SCRIPT_NAME']."\" method=\"post\">\n"
                             ."<label>Name</label><br><input type=\"text\" name=\"name\" value=\"".$order["name"]."\"><br>\n"
                             ."<label>Billing</label><br><input type=\"text\" name=\"billing\" value=\"".$order["billing"]."\"><br>\n"
-                            ."<label>Status</label><br><select name=\"status\"><option value=\"active\" ".($service["status"] == "active" ? "selected" : "").">active</option><option value=\"inactive\" ".($service["status"] == "inactive" ? "selected" : "").">inactive</option></select><br>\n"
+                            ."<label>Status</label><br><select name=\"status\"><option value=\"setting up\" ".($service["status"] == "setting up" ? "selected" : "").">setting up</option><option value=\"active\" ".($service["status"] == "active" ? "selected" : "").">active</option><option value=\"inactive\" ".($service["status"] == "inactive" ? "selected" : "").">inactive</option></select><br>\n"
                             ."<label>Comments</label><br><textarea name=\"comments\" rows=\"10\" cols=\"80\">".$order["comments"]."</textarea><br>\n"
                             ."<input type=\"hidden\" name=\"id\" value=\"".$order["id"]."\">"
                             ."<br><input type=\"submit\" name=\"save\" value=\"Save\"><a href=\"".$_SERVER['SCRIPT_NAME']."\">cancel</a>"

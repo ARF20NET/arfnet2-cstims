@@ -168,7 +168,7 @@ function genoption($id, $name) {
                             <input type=text name="name"><br>
                             <div id="commentcontainer">
                                 <br><label>Comments (describe use case and requirements)</label><br>
-                                <textarea id="commentbox" rows="10" cols="80" onchange="updatecomment()"></textarea><br>
+                                <textarea id="commentbox" rows="10" cols="80" onchange="update()"></textarea><br>
                             </div>
                             <input type="hidden" name="billing" id="billing">
                             <input type="hidden" name="comments" id="comments">

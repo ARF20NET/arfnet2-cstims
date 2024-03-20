@@ -28,7 +28,7 @@ CREATE TABLE `arfnet2`.`orders` (
     `client` INT NOT NULL ,
     `billing` VARCHAR(255) NOT NULL ,
     `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-    `status` ENUM('active','inactive') NOT NULL ,
+    `status` ENUM('setting up','active','inactive') NOT NULL ,
     `comments` TEXT NOT NULL ,
     PRIMARY KEY (`id`)
 );
