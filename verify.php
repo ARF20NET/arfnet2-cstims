@@ -1,4 +1,25 @@
 <?php
+
+function send_verify_notification($username) {
+    // send admin mail
+    $sql = "SELECT email FROM users WHERE type = 'admin'";
+    $stmt = mysqli_prepare($link, $sql);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $admins = $result->fetch_all(MYSQLI_ASSOC);
+
+    foreach ($admins as $admin) {
+        $mailer->addAddress($admin["email"]);
+    }
+    
+    $mailer->Subject = "New user registered";
+    $mailer->Body = "Admins,\n\nUser $username verified."
+        ."\n\n--\nARFNET Client, Service, Ticket and Invoice Management System\nhttps://arf20.com";
+    if (!$mailer->send()) {
+        echo 'Mailer Error [ask arf20]: ' . $mailer->ErrorInfo;
+    };
+}
+
 // Initialize the session
 session_start();
  
@@ -54,6 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
                                 $param_id = $id;
                                 if (mysqli_stmt_execute($stmt) && mysqli_stmt_affected_rows($stmt) == 1) {
                                     $verification_success = true;
+                                    send_verify_notification($username);
                                 } else {
                                     echo "SQL error, ask arf20.";
                                 }

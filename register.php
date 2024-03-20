@@ -13,6 +13,26 @@ function send_verification_email($rcpt, $code) {
     }
 }
 
+function send_register_notification($username) {
+    // send admin mail
+    $sql = "SELECT email FROM users WHERE type = 'admin'";
+    $stmt = mysqli_prepare($link, $sql);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $admins = $result->fetch_all(MYSQLI_ASSOC);
+
+    foreach ($admins as $admin) {
+        $mailer->addAddress($admin["email"]);
+    }
+    
+    $mailer->Subject = "New user registered";
+    $mailer->Body = "Admins,\n\nUser $username registered."
+        ."\n\n--\nARFNET Client, Service, Ticket and Invoice Management System\nhttps://arf20.com";
+    if (!$mailer->send()) {
+        echo 'Mailer Error [ask arf20]: ' . $mailer->ErrorInfo;
+    };
+}
+
 // Include config file
 require_once "config.php";
  
@@ -99,6 +119,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Send verification email
                 send_verification_email($email, $param_verifycode);
                 $verification_mail_sent = true;
+                // send admin notification
+                send_register_notification($username);
                 // Redirect to login page
                 header("location: login.php");
             } else {
