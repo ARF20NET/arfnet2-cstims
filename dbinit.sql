@@ -29,6 +29,7 @@ CREATE TABLE `arfnet2`.`orders` (
     `billing` VARCHAR(255) NOT NULL ,
     `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     `status` ENUM('setting up','active','inactive') NOT NULL DEFAULT 'setting up' ,
+    `duedate` TIMESTAMP NOT NULL DEFAULT 0 ,
     `comments` TEXT NOT NULL ,
     PRIMARY KEY (`id`)
 );
@@ -40,6 +41,7 @@ CREATE TABLE `arfnet2`.`tickets` (
     `body` TEXT NOT NULL ,
     `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     `status` ENUM('open','closed') NOT NULL DEFAULT 'open' ,
+    `closecomment` TEXT NOT NULL DEFAULT '',
     `asignee` INT NOT NULL ,
     PRIMARY KEY (`id`)
 );

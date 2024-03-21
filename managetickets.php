@@ -36,7 +36,7 @@ $result = mysqli_stmt_get_result($stmt);
 $orders = $result->fetch_all(MYSQLI_ASSOC);
 
 // Get tickets
-$sql = "SELECT id, `order`, subject, body, date, status, asignee FROM tickets";
+$sql = "SELECT id, `order`, subject, body, date, status, closecomment, asignee FROM tickets";
 $stmt = mysqli_prepare($link, $sql);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
@@ -58,13 +58,14 @@ if (isset($_GET["del"])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // add entry
     if (isset($_POST["add"])) {
-        $sql = "INSERT INTO tickets (`order`, subject, body, status, asignee) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO tickets (`order`, subject, body, status, closecomment, asignee) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($link, $sql);
-        mysqli_stmt_bind_param($stmt, "sssss", $param_order, $param_subject, $param_body, $param_status, $param_asignee);
+        mysqli_stmt_bind_param($stmt, "ssssss", $param_order, $param_subject, $param_body, $param_status, $param_closecomment, $param_asignee);
         $param_order = $_POST["order"];
         $param_subject = $_POST["subject"];
         $param_body = $_POST["body"];
         $param_status = $_POST["status"];
+        $param_closecomment = $_POST["closecomment"];
         $param_asignee = $_POST["asignee"];
 
         if (!mysqli_stmt_execute($stmt) || (mysqli_stmt_affected_rows($stmt) != 1)) {
@@ -74,10 +75,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // edit entry
     if (isset($_POST["save"])) {
-        $sql = "UPDATE tickets SET status = ?, asignee = ? WHERE id = ?";
+        $sql = "UPDATE tickets SET status = ?, closecomment = ?, asignee = ? WHERE id = ?";
         $stmt = mysqli_prepare($link, $sql);
-        mysqli_stmt_bind_param($stmt, "sss", $param_status, $param_asignee, $param_id);
+        mysqli_stmt_bind_param($stmt, "ssss", $param_status, $param_closecomment, $param_asignee, $param_id);
         $param_status = $_POST["status"];
+        $param_closecomment = $_POST["closecomment"];
         $param_asignee = $_POST["asignee"];
         $param_id = $_POST["id"];
 
@@ -157,8 +159,9 @@ function getuserbyid($id) {
                             ."<label><b>Subject</b></label><br><label>".$ticket["subject"]."</label><br>\n"
                             ."<label><b>Body</b></label><br><pre>".$ticket["body"]."</pre><br>\n"
                             ."<label><b>Status</b></label><br><select name=\"status\"><option value=\"open\" ".($ticket["status"] == "open" ? "selected" : "").">open</option><option value=\"closed\" ".($order["status"] == "closed" ? "selected" : "").">closed</option></select><br>\n"
+                            ."<label><b>Close comment</b><br><textarea name=\"closecomment\" rows=\"10\" cols=\"80\">".$ticket["closecomment"]."</textarea><br>\n"
                             ."<label><b>Asignee</b></label><br><select name=\"asignee\">$asignee_options</select><br>\n"
-                            ."<input type=\"hidden\" name=\"id\" value=\"".$ticket["id"]."\">"
+                            ."<input type=\"hidden\" name=\"id\" value=\"".$ticket["id"]."\">\n"
                             ."<br><input type=\"submit\" name=\"save\" value=\"Save\"><a href=\"".$_SERVER['SCRIPT_NAME']."\">cancel</a>"
                             ."</form></div>";
                     }
@@ -175,6 +178,7 @@ function getuserbyid($id) {
                             ."<label>Subject</label><br><input type=\"text\" name=\"subject\"><br>\n"
                             ."<label>Body</label><br><textarea name=\"body\" rows=\"10\" cols=\"80\"></textarea><br>\n"
                             ."<label>Status</label><br><select name=\"status\"><option value=\"open\">open</option><option value=\"closed\">closed</option></select><br>\n"
+                            ."<label>Close comment<br><textarea name=\"closecomment\" rows=\"10\" cols=\"80\"></textarea><br>\n"
                             ."<label>Asignee</label><br><select name=\"asignee\">$asignee_options</select><br>\n"
                             ."<br><input type=\"submit\" name=\"add\" value=\"Add\"><a href=\"".$_SERVER["SCRIPT_NAME"]."\">cancel</a>"
                             ."</form></div>";
@@ -183,7 +187,7 @@ function getuserbyid($id) {
 
                     <a href="?add">add</a>
                     <table>
-                        <tr><th>id</th><th>order</th><th>service</th><th>client</th><th>subject</th><th>body</th><th>date</th><th>status</th><th>asignee</th><th>action</th></tr>
+                        <tr><th>id</th><th>order</th><th>service</th><th>client</th><th>subject</th><th>body</th><th>date</th><th>status</th><th>close comment</th><th>asignee</th><th>action</th></tr>
                         <?php
                         foreach ($tickets as $ticket) {
                             $order = getorderbyid($ticket["order"]);
@@ -195,6 +199,7 @@ function getuserbyid($id) {
                             ."<td><details><summary></summary><pre>".$ticket["body"]."</pre></details></td>"
                             ."<td>".$ticket["date"]."</td>"
                             ."<td>".$ticket["status"]."</td>"
+                            ."<td><details><summary></summary><pre>".$ticket["closecomment"]."</pre></details></td>"
                             ."<td>".getuserbyid($ticket["asignee"])["username"]."</td>"
                             ."<td><a href=\"?del=".$ticket["id"]."\">del</a> <a href=\"?edit=".$ticket["id"]."\">edit</a></td></tr>\n";
                         }
