@@ -73,7 +73,7 @@ Tables:
     orders      List of user orders and management notes etc
         id autoincrement, service id, instance name, client id, order date, specific billing, comments
     tickets     List of tickets
-        id autoincrement, client id, title, body, status { open, closed, nofix }, asignee
+        id autoincrement, order id, subject, body, status { open, closed, nofix }, asignee
     invoices    List of invoices
-        id autoincrement, client id, service id, bill amount, description, date, status { paid, unpaid }
+        id autoincrement, order id, description, date, pdf, status { paid, unpaid }
 ```
