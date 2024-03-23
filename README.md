@@ -1,7 +1,7 @@
 # arfnet2-cstims
 ARFNET2 Client, Service, Ticket and Invoice Management System
 
-Depends on PHPMailer
+Depends on PHPMailer and TCPDF
 
 ```
 User types:
