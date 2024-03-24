@@ -105,6 +105,7 @@ function getorderbyid($id) {
                     <h3><a href="/logout.php">Logout</h2>
                     <h3><a href="/order.php">Order a new service</h2>
                     <h3><a href="/openticket.php">Open ticket</h2>
+                    <h3><a href="/pay.html">Payment methodes</h2>
                 </div>
             </div>
         </main>
