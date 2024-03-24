@@ -46,7 +46,7 @@ $services = $result->fetch_all(MYSQLI_ASSOC);
                 <div class="col2">
                     <h3><a href="/login.php">Login</h2>
                     <h3><a href="/register.php">Sign up today!</h2>
-                    <h3><a href="/pay.html">Payment methodes</h2>
+                    <h3><a href="/pay.html">Payment methods</h2>
                 </div>
             </div>
         </main>
