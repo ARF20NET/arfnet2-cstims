@@ -42,6 +42,13 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $tickets = $result->fetch_all(MYSQLI_ASSOC);
 
+// Get invoices
+$sql = "SELECT id, client, `desc`, amount, date, status FROM invoices";
+$stmt = mysqli_prepare($link, $sql);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$invoices = $result->fetch_all(MYSQLI_ASSOC);
+
 function getservicebyid($id) {
     global $services;
     foreach ($services as $service) {
@@ -135,7 +142,14 @@ function getorderbyid($id) {
                         </div>
                         <div class="col2">
                             <h3>Invoices</h3>
-                            <!-- TODO PHP list of services -->
+                            <table>
+                                <tr><th>client</th><th>amount</th></tr>
+                                <?php
+                                foreach ($invoices as $invoice) {
+                                    echo "<tr><td>".getclientbyid($invoice["client"])["username"]."</td><td>".number_format($invoice["amount"], 2, '.', '')."€</tr>\n";
+                                }
+                                ?>
+                            </table>
                         </div>
                     </div>
                 </div>
