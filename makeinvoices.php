@@ -64,7 +64,7 @@ class InvoicePDF extends TCPDF {
 require_once "config.php";
 
 // Get clients
-$sql = "SELECT id, username FROM users WHERE type = 'client'";
+$sql = "SELECT id, username, email FROM users WHERE type = 'client'";
 $stmt = mysqli_prepare($link, $sql);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
@@ -87,6 +87,24 @@ $services = $result->fetch_all(MYSQLI_ASSOC);
 $fdom = new DateTime('first day of this month');
 $ldom = new DateTime('last day of this month');
 
+function send_invoice_mail($ret, $email, $desc) {
+    global $mailer;
+    new_mail();
+    $mailer->addAddress($email);
+    $mailer->Subject = "Invoice #".$ret[2];
+    $mailer->Body = "Customer,\n\nThis is a notice that a invoice has been generated on ".date("l, F j, Y")."\n"
+        ."for the amount of ".number_format($ret[1], 2, '.', '')." € with description\n\n"
+        .$desc."\n\n"
+        ."You may pay it in any of the payments methodes listed on our site,\nalways include the invoice ID in the payment concept."
+        ."\n\n--\nARFNET Client, Service, Ticket and Invoice Management System\nhttps://arf20.com";
+
+    $mailer->AddStringAttachment($ret[0], "invoice_".$ret[2].".pdf");
+
+    if (!$mailer->send()) {
+        echo 'Mailer Error [ask arf20]: ' . $mailer->ErrorInfo;
+    };
+}
+
 // POST actions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // add entry
@@ -105,8 +123,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "SQL error.";
         } else {
             echo $_POST["client"]." ok ".$ret[1]."\n";
-            header("location: /manageinvoices.php");
         }
+
+        send_invoice_mail($ret, getclientbyid($_POST["client"])["email"], $_POST["desc"]);
+
+        //header("location: /manageinvoices.php");
     }
 }
 
@@ -126,8 +147,9 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
             echo "SQL error.";
         } else {
             echo $client["id"]." ok ".$ret[1]."\n";
-            header("location: /manageinvoices.php");
         }
+
+        send_invoice_mail($ret, $client["email"], "Monthly invoice");
     }
 }
 
@@ -203,8 +225,8 @@ function generate_pdf($client, $dueorders, $desc = null, $manualqty = null) {
 
     $txt =
         "Invoice ID: $nextid\n"
-        ."Invoice date: ".date("l, F j\t\h, Y\n")
-        ."Due date: ".date("l, F j\t\h, Y\n\n");
+        ."Invoice date: ".date("l, F j, Y\n")
+        ."Due date: ".date("l, F j, Y\n\n");
     $pdf->Write(0, $txt, '', 0, 'L', true, 0, false, false, 0);
 
     $pdf->SetFont('helvetica', 'B', 20);
@@ -260,7 +282,7 @@ function generate_pdf($client, $dueorders, $desc = null, $manualqty = null) {
 
     $pdf->ColoredTable($theader, $columnsw, $columnsal, $tdata, true);
 
-    return array($pdf->Output('invoice.pdf', 'S'), $subtotal);
+    return array($pdf->Output('invoice.pdf', 'S'), $subtotal, $nextid);
 }
 
 ?>
