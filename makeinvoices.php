@@ -87,22 +87,59 @@ $services = $result->fetch_all(MYSQLI_ASSOC);
 $fdom = new DateTime('first day of this month');
 $ldom = new DateTime('last day of this month');
 
-foreach ($clients as $client) {
-    $ret = generate_pdf($client, array_filter($dueorders, function($e) { global $client; return $e["client"] == $client["id"]; }));
+// POST actions
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // add entry
+    if (isset($_POST["generate"])) {
+        $ret = generate_pdf(getclientbyid($_POST["client"]), array(getorderbyid($_POST["order"])), $_POST["desc"], $_POST["qty"]);
 
-    $sql = "INSERT INTO invoices (client, `desc`, amount, pdf) VALUES (?, ?, ?, ?)";
-    $stmt = mysqli_prepare($link, $sql);
-    mysqli_stmt_bind_param($stmt, "ssss", $param_client, $param_desc, $param_amount, $param_pdf);
-    $param_client = $client["id"];
-    $param_desc = "Monthly invoice";
-    $param_amount = $ret[1];
-    $param_pdf = $ret[0];
+        $sql = "INSERT INTO invoices (client, `desc`, amount, pdf) VALUES (?, ?, ?, ?)";
+        $stmt = mysqli_prepare($link, $sql);
+        mysqli_stmt_bind_param($stmt, "ssss", $param_client, $param_desc, $param_amount, $param_pdf);
+        $param_client = $_POST["client"];
+        $param_desc = $_POST["desc"];
+        $param_amount = $ret[1];
+        $param_pdf = $ret[0];
 
-    if (!mysqli_stmt_execute($stmt) || (mysqli_stmt_affected_rows($stmt) != 1)) {
-        echo "SQL error.";
-    } else echo $client["id"]." ok ".$ret[1]."\n";
+        if (!mysqli_stmt_execute($stmt) || (mysqli_stmt_affected_rows($stmt) != 1)) {
+            echo "SQL error.";
+        } else {
+            echo $_POST["client"]." ok ".$ret[1]."\n";
+            header("location: /manageinvoices.php");
+        }
+    }
 }
 
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    foreach ($clients as $client) {
+        $ret = generate_pdf($client, array_filter($dueorders, function($e) { global $client; return $e["client"] == $client["id"]; }));
+
+        $sql = "INSERT INTO invoices (client, `desc`, amount, pdf) VALUES (?, ?, ?, ?)";
+        $stmt = mysqli_prepare($link, $sql);
+        mysqli_stmt_bind_param($stmt, "ssss", $param_client, $param_desc, $param_amount, $param_pdf);
+        $param_client = $client["id"];
+        $param_desc = "Monthly invoice";
+        $param_amount = $ret[1];
+        $param_pdf = $ret[0];
+
+        if (!mysqli_stmt_execute($stmt) || (mysqli_stmt_affected_rows($stmt) != 1)) {
+            echo "SQL error.";
+        } else {
+            echo $client["id"]." ok ".$ret[1]."\n";
+            header("location: /manageinvoices.php");
+        }
+    }
+}
+
+
+function getorderbyid($id) {
+    global $dueorders;
+    foreach ($dueorders as $order) {
+        if ($order["id"] == $id) {
+            return $order;
+        }
+    }
+}
 
 function getservicebyid($id) {
     global $services;
@@ -113,8 +150,17 @@ function getservicebyid($id) {
     }
 }
 
+function getclientbyid($id) {
+    global $clients;
+    foreach ($clients as $client) {
+        if ($client["id"] == $id) {
+            return $client;
+        }
+    }
+}
 
-function generate_pdf($client, $dueorders) {
+
+function generate_pdf($client, $dueorders, $desc = null, $manualqty = null) {
     global $link, $fdom, $ldom;
     // get next invoice id
     $sql = "SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_name = 'invoices'";
@@ -158,7 +204,7 @@ function generate_pdf($client, $dueorders) {
     $txt =
         "Invoice ID: $nextid\n"
         ."Invoice date: ".date("l, F j\t\h, Y\n")
-        ."Due date: ".date("l, F j\t\h, Y\n");
+        ."Due date: ".date("l, F j\t\h, Y\n\n");
     $pdf->Write(0, $txt, '', 0, 'L', true, 0, false, false, 0);
 
     $pdf->SetFont('helvetica', 'B', 20);
@@ -179,14 +225,21 @@ function generate_pdf($client, $dueorders) {
         $price = (float)trim(substr($dueorder["billing"], 0, strpos($dueorder["billing"], "€"))) / (float)(30*24);
         $pricestr = number_format($price, 4, '.', '')." €/h";
         
-        $dueorderdate = new DateTime($dueorder["date"]);
-        $billingperiodstart = $dueorderdate > $fdom ? $dueorderdate : $fdom;
-        $billingperiod = $billingperiodstart->format("d-m-Y")." to ".$ldom->format("d-m-Y");
-        $billinginterval = date_diff($billingperiodstart, $ldom);
-        $qty = ($billinginterval->d * 24) + $billinginterval->h;
+        if (!isset($manualqty)) {
+            $dueorderdate = new DateTime($dueorder["date"]);
+            $billingperiodstart = $dueorderdate > $fdom ? $dueorderdate : $fdom;
+            $billingperiod = $billingperiodstart->format("d-m-Y")." to ".$ldom->format("d-m-Y");
+            $billinginterval = date_diff($billingperiodstart, $ldom);
+            $qty = ($billinginterval->d * 24) + $billinginterval->h;
+        } else {
+            $billingperiodstart = date("d-m-Y");
+            $billingperiodend = (new DateTime())->add(new DateInterval("PT".$manualqty."H"));
+            $billingperiod = $billingperiodstart." to ".$billingperiodend->format("d-m-Y");
+            $qty = $manualqty;
+        }
+
         $amount = $price*$qty;
         $subtotal += $amount;
-
         $amountstr = number_format($amount, 2, '.', '')." €";
         $tdata[] = array($dueorder["id"], $dueorder["name"]." ($billingperiod)", getservicebyid($dueorder["service"])["name"], $pricestr." (".$dueorder["billing"].")", $qty, $amountstr);
     }

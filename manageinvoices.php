@@ -28,6 +28,13 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $invoices = $result->fetch_all(MYSQLI_ASSOC);
 
+// Get orders
+$sql = "SELECT id, service, name, client, date, billing, status, comments FROM orders";
+$stmt = mysqli_prepare($link, $sql);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$orders = $result->fetch_all(MYSQLI_ASSOC);
+
 // GET actions
 //   delete entry
 if (isset($_GET["del"])) {
@@ -128,6 +135,24 @@ function getinvoicebyid($id) {
                     <h3>Orders</h3>
 
                     <?php
+                    if (isset($_GET["add"])) {
+                        $client_options = $service_options = "";
+                        foreach ($clients as $client)
+                            $client_options .= "<option value=\"".$client["id"]."\">".$client["username"]."</option>";
+                        foreach ($orders as $order)
+                            //if ($order["client"] == )
+                            $order_options .= "<option value=\"".$order["id"]."\">".$order["name"]."</option>";
+                        echo "<div class=\"form\"><h3>Generate invoice</h3><form action=\"/makeinvoices.php\" method=\"post\">\n"
+                            ."<label><b>Client</b></label><br><select name=\"client\">".$client_options."</select><br>\n"
+                            ."<label><b>Order</b></label><br><select name=\"order\">".$order_options."</select><br>\n"
+                            ."<label><b>Description</b></label><br><input type=\"text\" name=\"desc\"><br>\n"
+                            ."<label><b>Quantity (hours)</b></label><br><input type=\"text\" name=\"qty\"><br>\n"
+                            ."<label><b>Status</b></label><br><select name=\"status\"><option value=\"paid\">paid</option><option value=\"unpaid\">unpaid</option></select><br>\n"
+                            ."<input type=\"hidden\" name=\"id\" value=\"".$invoice["id"]."\">"
+                            ."<br><input type=\"submit\" name=\"generate\" value=\"Generate\"><a href=\"".$_SERVER['SCRIPT_NAME']."\">cancel</a>"
+                            ."</form></div>";
+                    }
+
                     if (isset($_GET["edit"])) {
                         $invoice = getinvoicebyid($_GET["edit"]);
                         $client_options = $service_options = "";
@@ -143,7 +168,7 @@ function getinvoicebyid($id) {
                     }
                     ?>
 
-                    <a href="?add">add</a>
+                    <a href="?add">manual invoice</a>
                     <table>
                         <tr><th>id</th><th>client</th><th>description</th><th>amount</th><th>date</th><th>pdf</th><th>status</th><th>action</th></tr>
                         <?php
