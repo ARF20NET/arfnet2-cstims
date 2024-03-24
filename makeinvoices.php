@@ -88,10 +88,20 @@ $fdom = new DateTime('first day of this month');
 $ldom = new DateTime('last day of this month');
 
 foreach ($clients as $client) {
-    generate_pdf($client, array_filter($dueorders, function($e) { global $client; return $e["client"] == $client["id"]; }));
+    $ret = generate_pdf($client, array_filter($dueorders, function($e) { global $client; return $e["client"] == $client["id"]; }));
+
+    $sql = "INSERT INTO invoices (client, `desc`, amount, pdf) VALUES (?, ?, ?, ?)";
+    $stmt = mysqli_prepare($link, $sql);
+    mysqli_stmt_bind_param($stmt, "ssss", $param_client, $param_desc, $param_amount, $param_pdf);
+    $param_client = $client["id"];
+    $param_desc = "Monthly invoice";
+    $param_amount = $ret[1];
+    $param_pdf = $ret[0];
+
+    if (!mysqli_stmt_execute($stmt) || (mysqli_stmt_affected_rows($stmt) != 1)) {
+        echo "SQL error.";
+    } else echo $client["id"]." ok ".$ret[1]."\n";
 }
-
-
 
 
 function getservicebyid($id) {
@@ -197,7 +207,7 @@ function generate_pdf($client, $dueorders) {
 
     $pdf->ColoredTable($theader, $columnsw, $columnsal, $tdata, true);
 
-    $pdf->Output('invoice.pdf', 'I');
+    return array($pdf->Output('invoice.pdf', 'S'), $subtotal);
 }
 
 ?>

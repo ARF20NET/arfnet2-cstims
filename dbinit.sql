@@ -47,10 +47,11 @@ CREATE TABLE `arfnet2`.`tickets` (
 
 CREATE TABLE `arfnet2`.`invoices` (
     `id` INT NOT NULL AUTO_INCREMENT ,
-    `order` INT NOT NULL ,
+    `client` INT NOT NULL ,
     `desc` VARCHAR(255) NOT NULL ,
-    `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `amount` DECIMAL(10, 4) NOT NULL ,
     `pdf` MEDIUMBLOB NOT NULL ,
+    `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     `status` ENUM('paid','unpaid') NOT NULL DEFAULT 'unpaid' ,
     PRIMARY KEY (`id`)
 );
