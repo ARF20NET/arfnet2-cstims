@@ -24,7 +24,7 @@ $services = $result->fetch_all(MYSQLI_ASSOC);
             <div class="row">
                 <div class="col8">
                     <h2 class="center">ARFNET Client Service Ticket and Invoice Management System</h2>
-                    <p>State of the art hosting solution with ultra personalised service</p>
+                    <p>State of the art hosting solution with ultra personalised service and 24/7 support (fucked up sleep schedule)</p>
                     <div class="row">
                         <div class="col5">
                             <h3>Our cutting edge datacenter</h3>
