@@ -1,6 +1,10 @@
 <?php
 
+// Include config file
+require_once "config.php";
+
 function send_verify_notification($username) {
+    global $link;
     // send admin mail
     $sql = "SELECT email FROM users WHERE type = 'admin'";
     $stmt = mysqli_prepare($link, $sql);
@@ -28,9 +32,6 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     header("location: /".$_SESSION["type"].".php");
     exit;
 }
- 
-// Include config file
-require_once "config.php";
  
 // Define variables and initialize with empty values
 $code = "";

@@ -1,5 +1,6 @@
 <?php
-// Dependency
+// Include config file
+require_once "config.php";
 
 function send_verification_email($rcpt, $code) {
     global $mailer;
@@ -14,6 +15,7 @@ function send_verification_email($rcpt, $code) {
 }
 
 function send_register_notification($username) {
+    global $link;
     // send admin mail
     $sql = "SELECT email FROM users WHERE type = 'admin'";
     $stmt = mysqli_prepare($link, $sql);
@@ -32,9 +34,6 @@ function send_register_notification($username) {
         echo 'Mailer Error [ask arf20]: ' . $mailer->ErrorInfo;
     };
 }
-
-// Include config file
-require_once "config.php";
  
 // Define variables and initialize with empty values
 $username = $password = $confirm_password = $email = "";
