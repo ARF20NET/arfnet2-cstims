@@ -40,6 +40,6 @@ function new_mail() {
     $mailer->isHTML(false);
 }
 
-newmail();
+new_mail();
 
 ?>

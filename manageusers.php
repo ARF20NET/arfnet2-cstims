@@ -15,7 +15,7 @@ if ($type != "admin") die("Permission denied.");
 require_once "config.php";
 
 // Get users
-$sql = "SELECT id, username, email, verifycode, status, type, regdate FROM users";
+$sql = "SELECT id, username, password, email, verifycode, status, type, regdate FROM users";
 $stmt = mysqli_prepare($link, $sql);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);

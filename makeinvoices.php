@@ -1,6 +1,16 @@
 <?php 
 
-// Run first day of every month
+// Run first day of every month or
+
+$computedate = null;
+$computedateunix = null;
+if (isset($_GET["computedate"])) {
+    $computedate = $_GET["computedate"];
+    $computedateunix = strtotime($_GET["computedate"]);
+} else {
+    $computedate = new DateTime("now");
+    $computedateunix = time();
+}
 
 require_once("/usr/share/doc/php-tcpdf/examples/tcpdf_include.php");
 
@@ -84,8 +94,8 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $services = $result->fetch_all(MYSQLI_ASSOC);
 
-$fdom = new DateTime('first day of this month');
-$ldom = new DateTime('last day of this month');
+$fdom = new DateTime(date("Y-m-01", $computedateunix));
+$ldom = new DateTime(date("Y-m-t", $computedateunix)); 
 
 function send_invoice_mail($ret, $email, $desc) {
     global $mailer;
@@ -95,7 +105,7 @@ function send_invoice_mail($ret, $email, $desc) {
     $mailer->Body = "Customer,\n\nThis is a notice that a invoice has been generated on ".date("l, F j, Y")."\n"
         ."for the amount of ".number_format($ret[1], 2, '.', '')." € with description\n\n"
         .$desc."\n\n"
-        ."You may pay it in any of the payments methodes listed on our site,\nalways include the invoice ID in the payment concept."
+        ."You may pay it in any of the payments methods listed on our site,\nalways include the invoice ID in the payment concept."
         ."\n\n--\nARFNET Client, Service, Ticket and Invoice Management System\nhttps://arf20.com";
 
     $mailer->AddStringAttachment($ret[0], "invoice_".$ret[2].".pdf");
@@ -183,7 +193,7 @@ function getclientbyid($id) {
 
 
 function generate_pdf($client, $dueorders, $desc = null, $manualqty = null) {
-    global $link, $fdom, $ldom;
+    global $link, $fdom, $ldom, $computedateunix;
     // get next invoice id
     $sql = "SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_name = 'invoices'";
     $stmt = mysqli_prepare($link, $sql);
@@ -225,8 +235,8 @@ function generate_pdf($client, $dueorders, $desc = null, $manualqty = null) {
 
     $txt =
         "Invoice ID: $nextid\n"
-        ."Invoice date: ".date("l, F j, Y\n")
-        ."Due date: ".date("l, F j, Y\n\n");
+        ."Invoice date: ".date("l, F j, Y\n", $computedateunix)
+        ."Due date: ".date("l, F j, Y\n\n", $computedateunix);
     $pdf->Write(0, $txt, '', 0, 'L', true, 0, false, false, 0);
 
     $pdf->SetFont('helvetica', 'B', 20);
