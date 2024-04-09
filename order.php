@@ -178,8 +178,8 @@ function genoption($id, $name) {
                 </div>
                 <div class="col2">
                     <h3>Logged as <?php echo $username; ?></h3>
-                    <h3><a href="/logout.php">Logout</h2>
-                    <h3><a href="/client.php">Back to dashboard</h2>
+                    <h3><a href="/logout.php">Logout</a></h2>
+                    <h3><a href="/client.php">Back to dashboard</a></h2>
                 </div>
             </div>
         </main>

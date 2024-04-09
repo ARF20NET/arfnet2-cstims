@@ -52,6 +52,7 @@ CREATE TABLE `arfnet2`.`invoices` (
     `amount` DECIMAL(10, 4) NOT NULL ,
     `pdf` MEDIUMBLOB NOT NULL ,
     `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `proof` MEDIUMBLOB DEFAULT NULL ,
     `status` ENUM('paid','unpaid') NOT NULL DEFAULT 'unpaid' ,
     PRIMARY KEY (`id`)
 );

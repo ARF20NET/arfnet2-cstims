@@ -155,12 +155,12 @@ function getorderbyid($id) {
                 </div>
                 <div class="col2">
                     <h3>Logged as <?php echo $username; ?></h3>
-                    <h3><a href="/logout.php">Logout</h2>
-                    <h3><a href="/manageusers.php">Manage users</h2>
-                    <h3><a href="/manageservices.php">Manage services</h2>
-                    <h3><a href="/manageorders.php">Manage orders</h2>
-                    <h3><a href="/managetickets.php">Manage tickets</h2>
-                    <h3><a href="/manageinvoices.php">Manage invoices</h2>
+                    <h3><a href="/logout.php">Logout</a></h2>
+                    <h3><a href="/manageusers.php">Manage users</a></h2>
+                    <h3><a href="/manageservices.php">Manage services</a></h2>
+                    <h3><a href="/manageorders.php">Manage orders</a></h2>
+                    <h3><a href="/managetickets.php">Manage tickets</a></h2>
+                    <h3><a href="/manageinvoices.php">Manage invoices</a></h2>
                 </div>
             </div>
         </main>

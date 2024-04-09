@@ -102,10 +102,10 @@ function getorderbyid($id) {
                 </div>
                 <div class="col2">
                     <h3>Logged as <?php echo $username; ?></h3>
-                    <h3><a href="/logout.php">Logout</h2>
-                    <h3><a href="/order.php">Order a new service</h2>
-                    <h3><a href="/openticket.php">Open ticket</h2>
-                    <h3><a href="/pay.html">Payment methods</h2>
+                    <h3><a href="/logout.php">Logout</a></h2>
+                    <h3><a href="/order.php">Order a new service</a></h2>
+                    <h3><a href="/openticket.php">Open ticket</a></h2>
+                    <h3><a href="/pay.html">Payment methods</a></h2>
                 </div>
             </div>
         </main>

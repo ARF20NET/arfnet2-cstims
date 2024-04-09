@@ -209,8 +209,8 @@ function getuserbyid($id) {
                 </div>
                 <div class="col2">
                     <h3>Logged as <?php echo $username; ?></h3>
-                    <h3><a href="/logout.php">Logout</h2>
-                    <h3><a href="/admin.php">Back to admin panel</h2>
+                    <h3><a href="/logout.php">Logout</a></h2>
+                    <h3><a href="/admin.php">Back to admin panel</a></h2>
                 </div>
             </div>
         </main>
