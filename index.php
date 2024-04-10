@@ -47,6 +47,8 @@ $services = $result->fetch_all(MYSQLI_ASSOC);
                     <h3><a href="/login.php">Login</h2>
                     <h3><a href="/register.php">Sign up today!</h2>
                     <h3><a href="/pay.html">Payment methods</h2>
+                    <h3><a href="/privacy.html">Privacy Policy</h2>
+                    <h3><a href="/tos.html">Terms of Service</h2>
                 </div>
             </div>
         </main>

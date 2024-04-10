@@ -92,7 +92,7 @@ function genoption($id, $name) {
                 if (service["name"] == "vps") {
                     document.getElementById("extraform").innerHTML
                         = `<label><b>Options</b></label><br><label>Cores</label><br><select id=\"cpus\" onclick=\"update()\"><option value=\"1\">1</option><option value=\"2\">2</option><option value=\"3\">3</option><option value=\"4\">4</option></select><br>
-                        <label>Memory</label><br><select id=\"mem\" onclick=\"update()\"><option value=\"1\">1GB</option><option value=\"2\">2GB</option><option value=\"4\">4GB</option><option value=\"8\">8GB</option></select><br>
+                        <label>Memory</label><br><select id=\"mem\" onclick=\"update()\"><option value=\"0.5\">512MB</option><option value=\"1\">1GB</option><option value=\"2\">2GB</option><option value=\"4\">4GB</option><option value=\"8\">8GB</option></select><br>
                         <label>SSD</label><br><select id=\"ssd\" onclick=\"update()\"><option value=\"5\">5GB</option><option value=\"10\">10GB</option><option value=\"15\">15GB</option><option value=\"20\">20GB</option><option value=\"30\">30GB</option></select><br>
                         <br><label id=\"calculated\">Calculated price: </label>`;
                 } else document.getElementById("extraform").innerHTML = "";
