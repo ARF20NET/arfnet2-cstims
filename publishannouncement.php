@@ -35,13 +35,16 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
 // POST actions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Send email
-    $mailer->addAddress(ANNOUNCE_MAIL);
-    $mailer->addReplyTo(getuserbyid($id)["email"]);
-    $mailer->Subject = "[ARFNET Announcement] ".$_POST["subject"];
-    $mailer->Body = $_POST["body"];
+    if (defined("ANNOUNCE_MAIL")) {
+        echo "email ";
+        $mailer->addAddress(ANNOUNCE_MAIL);
+        $mailer->addReplyTo(getuserbyid($id)["email"]);
+        $mailer->Subject = "[ARFNET Announcement] ".$_POST["subject"];
+        $mailer->Body = $_POST["body"];
 
-    if (!$mailer->send()) {
-        echo 'Mailer Error [ask arf20]: ' . $mailer->ErrorInfo;
+        if (!$mailer->send()) {
+            echo 'Mailer Error [ask arf20]: ' . $mailer->ErrorInfo;
+        } else echo "ok<br>";
     }
 
     // Send discord message
@@ -64,6 +67,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($response == false) {
             echo 'Curl Error [ask arf20]: ' . $response;
         } else echo "ok<br>";
+    }
+
+    // Send IRC notification
+    if (defined("ANNOUNCE_IRCSERVER")) {
+        echo "irc ";
+        $fd = fsockopen(ANNOUNCE_IRCSERVER, 6667, $errno, $errstr, 5);
+        $read = fread($fd, 1024); // flush
+
+        // send login
+        fwrite($fd, "NICK system\r\n");
+        fwrite($fd, "USER system 0 * ARFNET CSTIMS Announcement System\r\n");
+
+        // read ping
+        do {
+            $read = fread($fd, 1024);
+        } while (!str_contains($read, "PING"));
+        $rndstr = substr($read, strpos($read, ":", 1) + 1);
+        // answer ping
+        fwrite($fd, "PONG :".$rndstr."\r\n");
+
+        // join channel
+        fwrite($fd, "JOIN ".ANNOUNCE_IRCCHANNEL."\r\n");
+        
+        $read = fread($fd, 1024); // flush
+
+        // send message
+        fwrite($fd, "PRIVMSG ".ANNOUNCE_IRCCHANNEL." :New announcement: ".$_POST["subject"]."\r\n");
+
+        fclose($fd);
+
+        echo "ok";
     }
 
     die();
