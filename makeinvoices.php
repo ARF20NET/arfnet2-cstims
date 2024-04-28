@@ -81,7 +81,7 @@ $result = mysqli_stmt_get_result($stmt);
 $clients = $result->fetch_all(MYSQLI_ASSOC);
 
 // Get due orders
-$sql = "SELECT id, service, name, client, billing, date FROM orders";
+$sql = "SELECT id, service, name, client, billing, date FROM orders WHERE status = 'active'"";
 $stmt = mysqli_prepare($link, $sql);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
@@ -296,3 +296,4 @@ function generate_pdf($client, $dueorders, $desc = null, $manualqty = null) {
 }
 
 ?>
+
