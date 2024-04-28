@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // send login
         fwrite($fd, "NICK system\r\n");
-        fwrite($fd, "USER system 0 * ARFNET CSTIMS Announcement System\r\n");
+        fwrite($fd, "USER system 0 * ARFNET CSTIMS UAS\r\n");
 
         // read ping
         do {
@@ -95,9 +95,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // send message
         fwrite($fd, "PRIVMSG ".ANNOUNCE_IRCCHANNEL." :New announcement: ".$_POST["subject"]."\r\n");
 
+        fwrite($fd, "QUIT\r\n");
+
         fclose($fd);
 
         echo "ok";
+    }
+
+    if (defined("ANNOUNCE_NNTPSERVER")) {
+        echo "nntp ";
+
+        $fd = fsockopen(ANNOUNCE_NNTPSERVER, 119, $errno, $errstr, 5);
+
+        fwrite($fd, "AUTHINFO USER ".ANNOUNCE_NNTPUSER."\r\n");
+        fwrite($fd, "AUTHINFO PASS ".ANNOUNCE_NNTPPASS."\r\n");
+        fread($fd, 1024); // flush
+
+        fwrite($fd, "POST\r\n");
+        do {
+            $read = fread($fd, 1024);
+        } while (!str_contains($read, "Message-ID"));
+        $msgidheader = substr($read, strpos($read, "Message-ID"), -1);
+        $msgidheader = str_replace("Message-ID", "Message-ID:", $msgidheader);
+
+        echo $msgidheader;
+
+        fwrite($fd,
+            $msgidheader."\r\n".
+            "From: System <system@arf20.com>\r\n".
+            "Reply-To: ".getuserbyid($id)["email"]."\r\n".
+            "Newsgroups: ".ANNOUNCE_NNTPGROUP."\r\n".
+            "Subject: ".$_POST["subject"]."\r\n".
+            "Date: ".date("r")."\r\n".
+            "Organization: ARFNET\r\n".
+            "User-Agent: ARFNET CSTIMS UAS\r\n\r\n".
+            $_POST["body"]."\r\n".
+            ".\r\n");
+
+            echo fread($fd, 1024);
+    
+        fwrite($fd, "QUIT\r\n");
+
+        fclose($fd);
     }
 
     die();
