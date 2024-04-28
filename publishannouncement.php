@@ -34,15 +34,39 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
 
 // POST actions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    /* Send email */
-    $mailer->addAddress(MAIL_ANNOUNCE_ADDRESS);
+    // Send email
+    $mailer->addAddress(ANNOUNCE_MAIL);
     $mailer->addReplyTo(getuserbyid($id)["email"]);
     $mailer->Subject = "[ARFNET Announcement] ".$_POST["subject"];
     $mailer->Body = $_POST["body"];
 
     if (!$mailer->send()) {
         echo 'Mailer Error [ask arf20]: ' . $mailer->ErrorInfo;
-    } else header("location: ".$_SERVER['SCRIPT_NAME']);
+    }
+
+    // Send discord message
+    if (defined("ANNOUNCE_DISCORD")) {
+        echo "discord ";
+        $json_data = json_encode([
+            "content" => "@everyone \nSubject: ".$_POST["subject"]."\n".$_POST["body"]
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+        $ch = curl_init(ANNOUNCE_DISCORD);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        if ($response == false) {
+            echo 'Curl Error [ask arf20]: ' . $response;
+        } else echo "ok<br>";
+    }
+
+    die();
 }
 
 

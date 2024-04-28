@@ -13,7 +13,8 @@ define('MAIL_USER', 'user');
 define('MAIL_PASSWORD', 'password');
 define('MAIL_FROM', 'system@example.com');
 
-define('MAIL_ANNOUNCE_ADDRESS', 'announce@example.com');
+define('ANNOUNCE_MAIL', 'announce@example.com');
+define('ANNOUNCE_DISCORD', 'https://discord.com/api/webhooks/thing');
 
 define('DOMAIN', 'dash.example.com');
  
