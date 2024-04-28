@@ -161,6 +161,7 @@ function getorderbyid($id) {
                     <h3><a href="/manageorders.php">Manage orders</a></h2>
                     <h3><a href="/managetickets.php">Manage tickets</a></h2>
                     <h3><a href="/manageinvoices.php">Manage invoices</a></h2>
+                    <h3><a href="/publishannouncement.php">Publish announcement</a></h2>
                 </div>
             </div>
         </main>

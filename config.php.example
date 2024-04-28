@@ -13,6 +13,8 @@ define('MAIL_USER', 'user');
 define('MAIL_PASSWORD', 'password');
 define('MAIL_FROM', 'system@example.com');
 
+define('MAIL_ANNOUNCE_ADDRESS', 'announce@example.com');
+
 define('DOMAIN', 'dash.example.com');
  
 /* Attempt to connect to MySQL database */
