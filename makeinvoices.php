@@ -156,7 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         if (!mysqli_stmt_execute($stmt) || (mysqli_stmt_affected_rows($stmt) != 1)) {
             echo "SQL error.";
         } else {
-            echo $client["id"]." ok ".$ret[1]."\n";
+            echo $client["id"]." ok ".$ret[1]."<br>\n";
         }
 
         send_invoice_mail($ret, $client["email"], "Monthly invoice");
