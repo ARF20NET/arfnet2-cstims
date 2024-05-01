@@ -115,28 +115,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         do {
             $read = fread($fd, 1024);
         } while (!str_contains($read, "Message-ID"));
-        $msgidheader = substr($read, strpos($read, "Message-ID"), -1);
+        /* Assumes CRLF */
+        $msgidheader = substr($read, strpos($read, "Message-ID"), -2);
         $msgidheader = str_replace("Message-ID", "Message-ID:", $msgidheader);
 
-        echo $msgidheader;
-
-        fwrite($fd,
-            $msgidheader."\r\n".
+        $message = 
             "From: System <system@arf20.com>\r\n".
             "Reply-To: ".getuserbyid($id)["email"]."\r\n".
             "Newsgroups: ".ANNOUNCE_NNTPGROUP."\r\n".
             "Subject: ".$_POST["subject"]."\r\n".
             "Date: ".date("r")."\r\n".
+            $msgidheader."\r\n".
             "Organization: ARFNET\r\n".
             "User-Agent: ARFNET CSTIMS UAS\r\n\r\n".
             $_POST["body"]."\r\n".
-            ".\r\n");
+            ".\r\n";
 
-            echo fread($fd, 1024);
+        $response = fread($fd, 1024);
     
         fwrite($fd, "QUIT\r\n");
 
         fclose($fd);
+
+        if (str_contains($response, "240 Article received"))
+            echo "ok";
+        else echo "error $response<br>";
     }
 
     die();

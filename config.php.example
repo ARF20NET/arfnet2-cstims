@@ -15,6 +15,12 @@ define('MAIL_FROM', 'system@example.com');
 
 define('ANNOUNCE_MAIL', 'announce@example.com');
 define('ANNOUNCE_DISCORD', 'https://discord.com/api/webhooks/thing');
+define('ANNOUNCE_IRCSERVER', 'irc.example.com');
+define('ANNOUNCE_IRCCHANNEL', '#example');
+define('ANNOUNCE_NNTPSERVER', 'news.example.com');
+define('ANNOUNCE_NNTPUSER', 'user');
+define('ANNOUNCE_NNTPPASS', 'password');
+define('ANNOUNCE_NNTPGROUP', 'misc.test');
 
 define('DOMAIN', 'dash.example.com');
  
