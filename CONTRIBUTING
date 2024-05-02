@@ -1,0 +1,35 @@
+Contributing
+============
+
+We gracefully accept bug reports and contributions from the community.
+However there are some requirements and mechanisms that we expect
+contributors to follow.
+
+Coding Standards
+----------------
+- The code must follow the ARFNET conding style, but improving on it is possible
+- The code should be written in a clean and readable style.
+- The code must be portable, generic and compatible with updated systems.
+- The code should be as secure, reviewed and tested as much as possible from a
+  security point of view.
+
+Breaking Changes
+----------------
+Breaking changes need to be justified, and will be discussed on the mailing list.
+In case of a breaking changes, post a patch draft with --rfc
+
+Making a Contribution
+---------------------
+1. Use git to register your development process.
+2. git-rebase large amounts of small commits.
+3. Use git format-patch to generate a patchset, be sure to have your
+   git config updated and correct.
+4. Email it to the development@xxxxxxxxx mailing list,
+   indicating "PATCH arfnet2-cstims" with --subject-prefix,
+   using git send-email. Include a patch comment with --compose.
+
+Then the appropiate maintainer will review the code for problems, and if checks
+OK, the maintainer will apply the patch on the development branch.
+Otherwise, the maintainer might request changes or reject the patch.
+Status of your contribution and followups will be posted in the mailing list.
+
