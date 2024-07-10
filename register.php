@@ -121,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // send admin notification
                 send_register_notification($username);
                 // Redirect to login page
-                header("location: verify.php");
+                header("location: login.php");
             } else {
                 echo "SQL failed. Idk ask arf20.";
             }
