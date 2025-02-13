@@ -99,6 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <meta charset="UTF-8">
         <title>CSTIMS Login</title>
         <link rel="stylesheet" type="text/css" href="/style.css">
+        <link rel="stylesheet" type="text/css" href="https://arf20.com/style.css">
     </head>
     <body>
         <header><a href="https://arf20.com/">
