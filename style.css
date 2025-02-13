@@ -1,18 +1,3 @@
-header *{
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.title {
-	font-size: 36px;
-    vertical-align: middle;
-}
-
-body {
-    background-image: url("tile1.jpg");
-    background-repeat: repeat;
-}
-
 .fst {
     font-size: 150%;
 }

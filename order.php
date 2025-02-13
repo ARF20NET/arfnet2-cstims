@@ -81,6 +81,7 @@ function genoption($id, $name) {
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="/style.css">
+        <link rel="stylesheet" type="text/css" href="https://arf20.com/style.css">
         <title>ARFNET CSTIMS</title>
         <script type="text/javascript">
             var services = <?php echo json_encode($services); ?>;
