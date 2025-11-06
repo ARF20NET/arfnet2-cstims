@@ -16,7 +16,7 @@ function send_verify_notification($username) {
         $mailer->addAddress($admin["email"]);
     }
     
-    $mailer->Subject = "New user registered";
+    $mailer->Subject = "New user verified";
     $mailer->Body = "Admins,\n\nUser $username verified."
         ."\n\n--\nARFNET Client, Service, Ticket and Invoice Management System\nhttps://arf20.com";
     if (!$mailer->send()) {
