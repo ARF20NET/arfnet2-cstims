@@ -145,13 +145,18 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     foreach ($clients as $client) {
         $ret = generate_pdf($client, array_filter($dueorders, function($e) { global $client; return $e["client"] == $client["id"]; }));
 
+        $param_amount = $ret[1];
+
+        if ($param_amount == 0.0)
+            continue;
+
         $sql = "INSERT INTO invoices (client, `desc`, amount, pdf) VALUES (?, ?, ?, ?)";
         $stmt = mysqli_prepare($link, $sql);
         mysqli_stmt_bind_param($stmt, "ssss", $param_client, $param_desc, $param_amount, $param_pdf);
         $param_client = $client["id"];
         $param_desc = "Monthly invoice";
-        $param_amount = $ret[1];
         $param_pdf = $ret[0];
+
 
         if (!mysqli_stmt_execute($stmt) || (mysqli_stmt_affected_rows($stmt) != 1)) {
             echo "SQL error.";
