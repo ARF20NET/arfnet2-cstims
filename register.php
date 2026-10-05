@@ -2,6 +2,13 @@
 // Include config file
 require_once "config.php";
 
+require 'CaptchasDotNet.php'
+
+$captchas = new CaptchasDotNet ('arf20', 'placeholder',
+                                '/tmp/captchasnet-random-strings','3600',
+                                'abcdefghkmnopqrstuvwxyz','6',
+                                '240','80','000088');
+
 function send_verification_email($rcpt, $code) {
     global $mailer;
     $mailer->addAddress($rcpt);
@@ -39,41 +46,60 @@ function send_register_notification($username) {
 $username = $password = $confirm_password = $email = "";
 $username_err = $password_err = $confirm_password_err = $email_err = "";
 $verification_mail_sent = false;
+
  
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validate username
-    if (empty($_POST["username"]))
-        $username_err = "Enter a username.";
-    else if (preg_match("/[a-zA-Z0-9_]+/", $_POST["username"]) != 1)
-        $username_err = "Invalid username.";
+    // Check the random string to be valid and return an error message
+    // otherwise.
+    if (!$captchas->validate ($_POST["random"]))
+    {
+        $this->error(
+            "The session key (random) does not exist, please go back and reload form.<br/>"
+            ."In case you are the administrator of this page, "
+            ."please check if random keys are stored correct.<br/>"
+            ."See http://captchas.net/sample/php/ 'Problems with save mode'");
+    }
+    // Check, that the right CAPTCHA password has been entered and
+    // return an error message otherwise.
+    elseif (!$captchas->verify ($_POST["captcha"]))
+    {
+        $confirm_password_err = "You entered the wrong password. Aren't you human? Please use back button and reload.";
+    }
     else {
-        // Prepare a select statement
-        $sql = "SELECT id FROM users WHERE username = ?";
-        
-        if ($stmt = mysqli_prepare($link, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
+        // Validate username
+        if (empty($_POST["username"]))
+            $username_err = "Enter a username.";
+        else if (preg_match("/[a-zA-Z0-9_]+/", $_POST["username"]) != 1)
+            $username_err = "Invalid username.";
+        else {
+            // Prepare a select statement
+            $sql = "SELECT id FROM users WHERE username = ?";
             
-            // Set parameters
-            $param_username = $_POST["username"];
-            
-            // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-                // store result
-                mysqli_stmt_store_result($stmt);
+            if ($stmt = mysqli_prepare($link, $sql)){
+                // Bind variables to the prepared statement as parameters
+                mysqli_stmt_bind_param($stmt, "s", $param_username);
                 
-                if(mysqli_stmt_num_rows($stmt) == 1){
-                    $username_err = "This username is already taken.";
+                // Set parameters
+                $param_username = $_POST["username"];
+                
+                // Attempt to execute the prepared statement
+                if(mysqli_stmt_execute($stmt)){
+                    // store result
+                    mysqli_stmt_store_result($stmt);
+                    
+                    if(mysqli_stmt_num_rows($stmt) == 1){
+                        $username_err = "This username is already taken.";
+                    } else{
+                        $username = $_POST["username"];
+                    }
                 } else{
-                    $username = $_POST["username"];
+                    echo "SQL failed. Idk, ask arf20.";
                 }
-            } else{
-                echo "SQL failed. Idk, ask arf20.";
-            }
 
-            // Close statement
-            mysqli_stmt_close($stmt);
+                // Close statement
+                mysqli_stmt_close($stmt);
+            }
         }
     }
 
@@ -173,6 +199,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="column"><label>Confirm Password</label></div>
                         <div class="column"><input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>"></div>
                         <span class="help-block"><?php echo $confirm_password_err; ?></span>
+                    </div>
+                    <div class="form-group">
+                        <input name="captcha" size="6" /><br>
+                        <?= $captchas->image () ?> <a href="javascript:captchas_image_reload('captchas.net')"><br>Reload Image</a>
                     </div>
                     <div class="form-group">
                         <input type="submit" class="btn btn-primary" value="Submit">
