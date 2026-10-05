@@ -2,7 +2,7 @@
 // Include config file
 require_once "config.php";
 
-require 'CaptchasDotNet.php'
+require 'CaptchasDotNet.php';
 
 $captchas = new CaptchasDotNet ('arf20', 'placeholder',
                                 '/tmp/captchasnet-random-strings','3600',
