@@ -201,10 +201,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <span class="help-block"><?php echo $confirm_password_err; ?></span>
                     </div>
                     <div class="form-group">
+                        <div class="column"><label>Captcha</label></div>
                         <input name="captcha" size="6" /><br>
                         <?= $captchas->image () ?> <a href="javascript:captchas_image_reload('captchas.net')"><br>Reload Image</a>
                     </div>
                     <div class="form-group">
+                        <input type="hidden" name="random" value="<?= $captchas->random () ?>" />
                         <input type="submit" class="btn btn-primary" value="Submit">
                     </div>
                     <p><a href="login.php">Login</a>.</p>
